@@ -1,0 +1,27 @@
+
+w00tw00t —> |0_o|
+AF 10 06E9 99BA 11 07 64 Cl 89 E3 40 8C 72 55
+
+
+0040112A  AF 10 06 E9 99 BA 11 07 64 C8 9E 34 08 C7 25 50                 ¯..é.º..dÈ.4.Ç%P
+
+vemos tarde o temprano una string llamativa y un llamado al nombre del pc, quizas el principio basico es pasar los argumentos necesarios
+
+programa.exe parametro1 parametro2
+el primer parametro es el nombre del programa
+00401154 | FF 15 28 D0 40 00        | call dword ptr ds:[<&GetComputerNameW>] |
+
+el segundo es un string que se encuentra solo con IDA "NealStephenson"
+
+al pasar los 2 argumentos se ve asi
+---------------------------
+KEY
+---------------------------
+Crypt0n0mic0n2017
+---------------------------
+Aceptar   
+---------------------------
+
+
+asi que la flag es Crypt0n0mic0n2017 en md5
+flag{1ce2859e0bcfa33994fbe2d8ce309e27}

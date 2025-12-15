@@ -1,0 +1,8 @@
+spear pishing 2 se abre el archivo en notepad++, 
+se convierte a hex las string que se leen y aparece la url maliciosa
+http://string-functions.com/hex-string.aspx 
+ use para convertir y sale entre tanto string la web , debe ser procesado con http y hasta la extension..
+aqui va:
+
+printf "http://dagobah.local/logo.doc" | md5sum
+fb7534ecc904766563ad711331a11121  -

@@ -1,0 +1,50 @@
+el programa busca un argumento en el caso de Noah muestra el base64 que dice 
+encontramos un archivo packed con upx, desempacamos
+
+colocamos el primer argumento Noah 
+
+-> V2hlcmUgaXMgTm9haCEhISE=
+Pass: 1d90432e6d5c6f40dfe9589d9d0450a53b0add9a55f71371d601a5d454fa0431
+
+Where is Noah!!!!  >significa esa base de datos
+
+dice ONCE tambien
+http://es.strangerthings.wikia.com/wiki/Once
+
+
+pruebo y no me dan :
+kali-linux-2016.2-amd64.iso  (pensando en el decoded del hash)
+Netflix  netflix  (pensando en el lugar donde emiten )
+Stranger Things  (nombre de la serie inspirada)
+Hawkins  (lugar fisico del lugar)
+Indiana (lugar fisico)
+Laboratorio Nacional de Hawkins(laboratorio..)
+Laboratorio Nacional(laboratorio..)
+el Mundo del Revés(mundo paralelo)
+Mundo del Revés(mundo paralelo)
+Estados Unidos
+
+
+
+
+si busco mas referencias en el exe dice
+[mkultra_unpackedapuromafo.013C6560]=61 81 42 47 26 F7 F5 76 2B 91 2B CE 87 28 77 CA
+->
+You are trap on Upside Down!!
+f528764d624db129b32c21fbca0cb8d6
+
+si sigo buscando variables, hay una Hawkins (arriba de Joyce) y ONCE que es manejada hacia un socket de 127.0.0.1
+
+la pregunta entonces es que buscamos xD
+
+trabaja con rotaciones 3, 2, 5, y aun viendo las referencias no entiendo que quiere xD
+
+perdí la opcion de puntuar en este reto, pero cuando tenga mas tiempo seguiré intentando :)
+
+
+hasta donde entiendo debemos colocar un environment variable y además verificar el argumento, ademas de un socket que esta alerta..
+desde ahi hay que seguir buscando
+saludos
+
+
+

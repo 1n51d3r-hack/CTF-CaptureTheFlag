@@ -1,0 +1,19 @@
+una vez desempacado, es posible revisar en dnspy y con ello ver el pass
+
+Private Sub textBox1_KeyDown(sender As Object, e As KeyEventArgs)
+			If e.KeyCode = Keys.[Return] Then
+				Me.textBox1.ForeColor = Color.Black
+				If Me.textBox1.Text = "RedSkull2017" Then
+					Me.timer1.Enabled = False
+					Me.textBox1.Text = "Good Job!"
+					Me.textBox1.ForeColor = Color.Red
+					Return
+				End If
+				Me.timer1.Enabled = True
+				Me.textBox1.Clear()
+			End If
+		End Sub
+		
+		
+		flag RedSkull2017
+		
