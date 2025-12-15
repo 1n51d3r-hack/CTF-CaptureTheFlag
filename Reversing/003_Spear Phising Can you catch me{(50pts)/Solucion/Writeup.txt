@@ -1,0 +1,43 @@
+Spear Phising... Can you catch me? (50pts)
+es abrir en notepad++ explorar un poco del formato , google y aparece de inmediato el cve por el rtf en su vulnerabilidad
+lo que busco es esto 
+
+{\operator }
+}
+{\*\xmlnstbl {\xmlns1 http://schemas.microsoft.com/office/word/2003/wordml}}
+{
+{\object\objautlink\objupdate\rsltpict\objw291\objh230\objscalex99\objscaley101
+{\*\objclass Word.Document.8}
+{\*\objdata 0105000002000000
+
+
+google refier
+5 resultados (0.96 segundos) 
+Resultados de búsqueda
+
+
+Microsoft Word (CVE-2017-0199) RCE through a HTA Handler, by ...
+https://gist.github.com/.../f60b480cdd2f51f93882cb35c9ce4bd0
+Traducir esta página
+Microsoft Word (CVE-2017-0199) RCE through a HTA Handler, by Juan Sacco / <jsacco@exploitpack.com> ... Vendor homepage: http://www.microsoft.com ... {\\xmlns1 http://schemas.microsoft.com/office/word/2003/wordml}}\r\n{\r\n{\\object\\objautlink\\objupdate\\rsltpict\\objw291\\objh230\\objscalex99\\objscaley101\r\n{\\*\\ ...
+Microsoft Word - '.RTF' Remote Code Execution - Exploit-DB
+https://www.exploit-db.com/exploits/41894/
+Traducir esta página
+18 abr. 2017 - payload + = "{\\operator }\n". payload + = "}\n". payload + = "{\\*\\xmlnstbl {\\xmlns1 http://schemas.microsoft.com/office/word/2003/wordml}}\n". payload + = "{\n". payload + = "{\\object\\objautlink\\objupdate\\rsltpict\\objw291\\objh230\\objscalex99\\objscaley101\n". payload + = "{\\*\\objclass Word.
+Exploiting CVE-2017-0199: HTA Handler Vulnerability – MDSec
+https://www.mdsec.co.uk/.../exploiting-cve-2017-0199-hta-handl...
+Traducir esta página
+13 abr. 2017 - {\object\objautlink\objupdate\rsltpict\objw9027\objh450{\*\objclass Word.Document.8}{\*\objdata. Opening the RTF file now causes the hosted HTA file to run without user interaction: It's also worth noting that our research shows that if the user does not have Microsoft Office installed, the issue can still be ...
+
+
+los 3 refieren el mismo cve, asi que demosle:
+
+
+printf "CVE-2017-0199" | md5sum
+93b146d21d3bdc8635836f8a11ba62b9  -
+
+
+
+flag{93b146d21d3bdc8635836f8a11ba62b9}
+
+

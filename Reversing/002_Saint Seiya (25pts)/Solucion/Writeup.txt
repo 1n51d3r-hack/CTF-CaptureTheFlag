@@ -1,0 +1,12 @@
+usamos el depurador de siempre, buscamos referencias llamativas:
+
+->012C1241 | BE 58 68 2D  | mov esi, saint_seiya-3db53d5cf73c57e698 | 0x12D6858:"UGFyYWQweA=="  
+esa string esta en base64
+se decodifica en https://www.base64decode.org/ o bien con mi tool
+
+clave:Parad0x
+al probar dice esa es la key
+se crea la flag con md5(Parad0x)
+y tenemos:
+
+flag{7b3c545bcf45f2be9627e5e1b1cdf357}

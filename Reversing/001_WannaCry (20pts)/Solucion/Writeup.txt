@@ -1,0 +1,8 @@
+
+herramienta usada 
+https://www.hybrid-analysis.com/sample/f60d07422a50e62bf3b92ab406b83b26fcd203a1e77ae2a9a6c239766f65eb8f?environmentId=100
+buscamos bien lo que piden, y hasheamos
+
+
+hash de respuesta
+flag{78769a4b0c76cf449aa023a19df761ea}

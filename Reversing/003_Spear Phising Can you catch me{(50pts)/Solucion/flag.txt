@@ -1,0 +1,3 @@
+printf "CVE-2017-0199" | md5sum
+
+flag{93b146d21d3bdc8635836f8a11ba62b9}
