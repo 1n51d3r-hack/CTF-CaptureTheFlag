@@ -1,0 +1,30 @@
+comenzamos con el parametro -h STONE
+
+>>> Alex you are in danger, the Radaxian city needs you...
+>>> Take this map to travel through the Miracle World...
+>>> Defeat Janken and get the Moonlight Stone...
+>>> You must be stealthy, there will be many traps in your way...
+>>> Use the Shellcore discipline at all times...
+>>> Remember who your father is...
+>>> Good Luck!...
+--------------------------------------------------------------
+
+tenemos mas opciones 
+GA ->
+bCXE^^K -> Hirotta
+ShellcoreDiscipliJA
+ShellcoreDiscipline  
+
+se ven operatorias xor, se ven mutexA, se aprecia muchas string 
+si esta establecido el environment variable STONE y ademas el de Shellcoredis..... 
+
+ [+] Well done! Gooseka has been defeated
+ 
+ es necesario invocar el cmd.exe para hacer funcionar el exe y ver mejor los mensajes
+ 
+ pero un paso a la vez :)
+ invocar desde cmd y ir generando los mutexA y environmentVariable segun se necesite
+ 
+ se aprecia una palabra
+
+ 
