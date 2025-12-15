@@ -1,0 +1,6 @@
+meta dato2: herramienta usada https://29a.ch/photo-forensics/#exif-meta-data
+flag es    el modelo de la camara esto es
+
+ILCE-6000
+
+flag{a00f40c5781331e16c25b73516e6202f}

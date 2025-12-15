@@ -1,0 +1,2 @@
+php -r 'echo "flag{".md5("8388480")."}\n";'
+flag{cd703af39fe04b065fc563993d236f37}

@@ -1,0 +1,3 @@
+el reto es un poco largo, hay que usar la misma codificacion y se obtiene:
+Password: xorXorXorxor
+se calcula el md5 y tenemos el flag.txt

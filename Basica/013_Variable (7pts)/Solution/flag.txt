@@ -1,0 +1,3 @@
+error: max  esta recibe string no numeritos
+
+flag{2ffe4e77325d9a7152f7086ea7aa5114}

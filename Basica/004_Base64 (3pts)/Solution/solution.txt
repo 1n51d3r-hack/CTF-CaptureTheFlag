@@ -1,0 +1,3 @@
+Recuerda que cuando codificas algo en base64 NO lo estás cifrando, sino que simplemente lo estás codificando.
+
+La contraseña para superar este reto es: base64NOescifrar

@@ -1,0 +1,2 @@
+flag del  magic number   (MD5)  ->00000020667479706D703432
+flag{c2cc5e2f05d57fa0ed169bd17efa57eb}

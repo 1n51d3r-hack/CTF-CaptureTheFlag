@@ -1,0 +1,7 @@
+aqui entra el reto de colocar ' o "
+si colocar mayusculas o minusculas
+
+
+el equivalente en bash es al final:
+
+flag{bbf02728ac533b306fb112c4a5b66926}

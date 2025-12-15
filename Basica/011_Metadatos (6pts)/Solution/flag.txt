@@ -1,0 +1,3 @@
+meta dato 1:  herramienta usada notepad++
+Aldus Corporation
+flag{ea930a810edfb6bc250effaf1e504027}

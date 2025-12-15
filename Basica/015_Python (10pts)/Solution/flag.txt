@@ -1,0 +1,3 @@
+
+php -r 'echo "flag{".md5("pythonSnakeBite77")."}\n";'
+flag{6cff35575e778bd78557444667db48bd}

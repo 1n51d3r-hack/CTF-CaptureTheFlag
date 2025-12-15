@@ -1,0 +1,19 @@
+https://servertest.online/entropy
+ y criptotool
+orden de imagen, entropia desde cryptool, nombre, entropia desde la web
+
+ 1ro 7.97  aircraft   15.438686 min:0 med:2 max:529
+2do 7.95  blue       15.600247 min:0 med:6 max:1486
+3ro cello 7.97       15.412226 min:0 med:2 max:550
+4to chess 7.91       15.412226 min:0 med:2 max:550
+5to chesnut 7.97     14.760387 min:0 med:1 max:599
+6to fire 7.97mo      15.529219 min:0 med:3 max:848
+7mo fly 7.96         15.616459 min:0 med:5 max:1068
+8vo seemed 7.97      15.717580 min:0 med:5 max:952
+9no wafle hearrt 7.95 15.534267 min:0 med:3 max:652
+
+a primera vista se ven 3 llamativos, se prueban 2, no son
+
+cello-2830670_1920.jpg    bingo
+
+asi obtenemos luego el flag con md5
