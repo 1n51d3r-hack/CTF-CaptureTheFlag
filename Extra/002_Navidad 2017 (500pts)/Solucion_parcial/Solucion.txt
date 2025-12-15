@@ -1,0 +1,151 @@
+el primer comienzo que tenemos es que miramos la imagen, pareciera que hay unos textos en letra pequeña y pasa muy rapido
+se necesitan herramientas para ver un .swf
+buscando por la red no falta y se encuentran descompiladores de código
+https://www.free-decompiler.com/flash/download/?utm_source=app&utm_medium=update&utm_campaign=app
+
+bajo uno cualquiera
+me refiere que esta en github
+https://github.com/jindrapetrik/jpexs-decompiler/releases
+
+al estar en java, esta multiplataforma, mac, linux , windows
+
+al revisar en el interior del swf
+ con un visor de swf, se encuentra un enlace de mega.co.nz
+tiene todo el aspecto de ser un archivo comprimido con contraseña y 3 archivos
+https://mega.nz/#!52p0VDza!g10n3iFE1wxEIqVVKSnrwPoIryR9JfwwFm2BUdTwrH8
+
+AB
+rudolph.jpg
+XMAS.exe
+
+aqui hay que aplicar fuerza bruta, para conocer la contraseña, 
+dado que el reto es navidad deberia tener algo relacionado con ello
+	 asi que lo almaceno en Archivo 1
+	 los primeros bytes se ven asi:
+	 
+
+OHOH
+     W–K               xmas/PK
+	
+
+*Nota	en la cabezera del archivo se aprecia de que es un archivo PK (comprimido)
+
+y que al estar deformado hay que armar algo, bueno igual 7z permite descomprimir
+con la clave (redoble de tambores.....)  solo hay que cambiar los primeros 4 bytes
+con  fcrackzip  se obtiene el key "merryxmas"
+ 
+
+analizando el exe , refiere que santa claus usa radare2
+
+
+004193F4  ..A.......A.......A."...$.A.#...(.A.$...,.A.%...0.A.&...8.A.sinh  
+00419434  ....cosh..........ð.ÿÿÿÿÿÿï.........Santa Claus uses Radare2!!!   
+00419474  oh oh oh....%c..n.t.d.l.l...d.l.l...DbgUiRemoteBreakin..-reno...  
+004194B4  Oh, bring us some figgy pudding...........ð?.......@.......@....
+
+
+las secciones de este exe tienen nombre extraño 
+hacen alusion a los renos 
+Prancer
+Rudolph
+Vixen
+Donner
+Blitzen
+
+
+pero en realidad son (8 renos fuente:wikipedia)
+
+
+
+Dasher, Dancer, Prancer, Vixen, Comet, Cupid, Donner, and Blitzen
+
+
+os Renos navideños permitirían repartir los regalos de Papá Noel en la nochebuena y navidad que va del 24 de diciembre al 25 de diciembre. 
+Los encargados de su cuidado serían los Duendes navideños.
+
+El trineo mágico volador, sería tirado por nueve renos llamados Donner (Trueno),
+ Blitzen (Relámpago o Rayo), 
+ Vixen (Bromista, Juguetón, Travieso),
+ Cupid (Cupido), Comet (Cometa, Veloz),
+ Dasher (Alegre, Brioso, Enérgico, Jactancioso, Presuntuoso o Vondín), Dancer (Bailarín),
+ y Prancer (Acróbata, Saltarín o Pompón); y liderados por un reno con la nariz roja llamado Rudolph (Rodolfo),
+ 1​ siendo este el último reno en agregarse a la historia.
+
+ 
+ 
+ si usamos el programita con parametro -reno aumenta una validacion y llega cerca de una string que se llama Oh, bring us some figgy pudding
+ 
+ pero aun asi, es comparado una palabra sirou
+ que aun asi no es algo que estuviera en la logica anterior.. 
+ por otro lado, podemos apreciar en el final del archivo de la imagen del reno, que hay overlay y en AB se encuentra un overlay tambien similar
+ 
+ asumo por experiencia que deberá ser algo cifrado que nos llevará a la siguiente etapa a resolver xD
+ 
+ por otro lado si analizamos la frase "Oh, bring us some figgy pudding"
+ 
+ se asocia a la cancion de navidad https://en.wikipedia.org/wiki/We_Wish_You_a_Merry_Christmas
+ 
+ 
+ We wish you a merry Christmas,
+We wish you a merry Christmas,
+We wish you a merry Christmas
+And a happy New Year.
+Good tidings we bring
+To you and your kin;
+We wish you a merry Christmas
+And a happy New Year!
+2
+Oh, bring us some figgy pudding,
+Oh, bring us some figgy pudding,
+Oh, bring us some figgy pudding,
+And bring it right here.
+Good tidings we bring
+To you and your kin;
+We wish you a merry Christmas
+And a happy New Year!
+3
+We won't go till we get some,
+We won't go till we get some,
+We won't go till we get some,
+So bring it right here.
+Good tidings we bring
+To you and your kin;
+We wish you a merry Christmas
+And a happy New Year!
+4
+We all like our figgy pudding,
+We all like our figgy pudding,
+We all like our figgy pudding,
+With all its good cheers
+Good tidings we bring
+To you and your kin
+We wish you a merry Christmas
+And a happy New Year.
+We wish you a merry Christmas
+We wish you a merry Christmas
+We wish you a merry Christmas
+And a happy New Year!
+
+
+
+asi que lo que falta es decodificar bien el exe, quizas hay que usar radare o bien, debemos intentar buscar mas
+y entender que puede ser AB  y el final de stego de la imagen de reno...
+
+por otro lado luego de pasar la validacion del reno pasa por una parte donde llama a buscar un recurso de ?  una dll o bien del programa, no estoy seguro
+quizas eso debe ser para cuando tenga algo de tiempo :)
+dejare una carpeta de img para revisar el png porciacaso.
+pero que es claro que hay otro reto de stenografía por aqui..pues eso es claro.
+
+
+Saludos
+ 
+ 
+
+
+
+
+
+	 
+
+	 
+	 

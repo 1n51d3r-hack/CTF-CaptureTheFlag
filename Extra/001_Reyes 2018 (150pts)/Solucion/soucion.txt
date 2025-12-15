@@ -1,0 +1,111 @@
+Analizar las string de 
+https://atenea.ccn-cert.cni.es/static/59b514174bffe4ae/f2588f3111df6d03bdc89774ed3be3a2.gif
+con ayuda de https://29a.ch/photo-forensics/
+
+se encuentra algo especial de strings ejemplo:
+
+NETSCAPE2.0
+Created with GIMP
+
+si continuo observando hay servicios que sirven para extraer gif,
+https://ezgif.com/maker/ezgif-4-81a439b738-gif-im/ezgif-4-81a439b738.gif
+
+ adjunto el ejemplo, y se aprecia como cambian los puntitos
+ 
+asi que indirectamente podemos pensar que hay "morse" de por medio...ya sea del cartel o de los zapatos.
+ahora bien si pensamos en morse hay espacios, hay guion y hay puntos, puede haber muchas opciones, y no se sabe aun cuanto es el tiempo del delay real
+yo puse un delay de 3seg, pero podria haber mensajes entre medio.
+aunque tampoco descarto que pueda ser además algun binario (pintado = 1 , no pintado =0), deja mucho que pensar aun 
+
+creo que ese seria el primer paso
+veo que son 21 frames en total mirandolo con casi cualquier visor como tal
+mirando solo el zapatos
+asumire por el lado de binario... el largo de bits será el tema final para ver si se resuelve
+
+
+
+ahora mirando la caja ? son 3 puntos pero solo 1 cambia, quizas los demas se omiten
+veamos
+si la caja es 0/1 y los zapatos igual, hablamos de un binario de 7 bits
+zapatos pintado = 1  y no pintado claro(0)
+
+#00# (1)10  11  11 ->(o)  hexa (6F)
+#01# (1)01  11  10 ->(^) hexa ()
+#02# (1)00  11  00 ->()
+#03# (1)00  11  00
+#04# (1)00  10  00
+#05# (1)01  00  00
+#06# (1)00  11  01
+#07# (1)01  10  11
+#08# (0)00  01  01
+#09# (0)01  11  11
+#10# (1)11  10  01
+#11# (0)00  11  00
+#12# (1)11  00  11
+#13# (0)00  11  10
+#14# (1)00  01  01
+#15# (1)10  00  00
+#16# (0)00  11  01
+#17# (0)00  11  11
+#18# (0)00  11  10
+#19# (0)00  01  11
+#20# (0)01  11  10
+al usar esta tool para apuromafo
+
+https://www.dcode.fr/ascii-code
+sale un output en 7 bits 
+1100001 1110000 1110101 1110010 1101111 1101101 1100001 1100110 1101111
+ a       p        u      r       o        m         a      f      o  
+ 
+ tambien hay en el sitio de binario a decimal
+ https://www.rapidtables.com/convert/number/ascii-hex-bin-dec-converter.html
+ 
+ 
+ resultando esto:
+dec  111 94 76 76 72 80 77 91    5   31 121 12 115 14 69 96 13 15 14 7 30
+hex 6F 5E 4C 4C 48 50 4D 5B 05 1F 79 0C 73 0E 45 60 0D 0F 0E 07 1E
+o^LLHPM[ysE`
+
+ 
+ no parece nada coherente, pero ojala tuviera una luz.. luz!! haber
+ 1= encendido, 0 apagado, mi binario esta al revez de los zapatos,asi que ahora corrijo
+ 
+ si la caja es 0/1 como el tema anterior, 0 apagado 1 encendido  y los zapatos igual pintado oscuro=0 y pintado claro = 1
+ 
+ , hablamos de un binario de 7 bits
+(encendida la luz=1)  donde 10 es apagado encendido ,  y el 01 es encendido apagado ...
+
+asi que ahora a convertirlo bien quizas es eso me falta solamente (porque la caja ya lo tenia como encendido/apagado)
+frame 
+#00# (1)10  11  11  ->  1010000 ->P
+#01# (1)01  11  10  ->  1100001 ->A   (corregido, tenia mal la luz final xD)
+#02# (1)00  11  00  ->  1110011 ->s
+#03# (1)00  11  00  ->  1110011 ->s
+#04# (1)00  10  00  ->  1110111 ->w
+#05# (1)01  00  00  ->  1101111 ->o
+#06# (1)00  11  01  ->  1110010 ->r
+#07# (1)01  10  11  ->  1100100 ->d
+#08# (0)00  01  01  ->  0111010 ->:
+#09# (0)01  11  11  ->  0100000 ->(Space)
+#10# (1)11  10  01  ->  1000110 ->F
+#11# (0)00  11  10  ->  0110011 ->3 
+#12# (1)11  00  11  ->  1001100 ->L
+#13# (0)00  11  10  ->  0110001 ->1
+#14# (1)00  01  01  ->  1111010 ->z
+#15# (1)10  00  00  ->  1011111 ->_
+#16# (0)00  11  01  ->  0110010 ->2
+#17# (0)00  11  11  ->  0110000 ->0
+#18# (0)00  11  10  ->  0110001 ->1
+#19# (0)00  01  11  ->  0111000 ->8
+#20# (0)01  11  10  ->  0100001 ->!
+ 
+ #10# (1)11  10  01  ->  1000110 ->F3L1z_2018!
+ adjunto ademas la tabla completa
+ 
+ 
+ flag{629e66694f2d68c2e22ee69692eab001}
+
+
+
+
+
