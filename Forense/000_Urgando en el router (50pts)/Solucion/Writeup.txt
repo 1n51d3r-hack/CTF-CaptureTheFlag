@@ -1,0 +1,54 @@
+Para resolver tenemos que encontrar la contraseña, la gran mayoria de router usan la estructura de linux
+
+abrimos con un 7zip , buscamos carpeta etc/passwd pero no contiene hash, vamos a etc/shadow
+y tiene el hash a buscar...
+root:$6$5b0uEOay$H73QzACK1rV6SL.s4t4FRQwme89ro3FaYK0RnmP4jN4r.gM6EvIVMDMj9KlkSFSCWRX2pjS/tkwstq/9sjDqt1:17528:0:99999:7:::
+
+
+daemon:*:0:0:99999:7:::
+ftp:*:0:0:99999:7:::
+network:*:0:0:99999:7:::
+nobody:*:0:0:99999:7:::
+dnsmasq:x:0:0:99999:7:::
+
+por documentacion
+1. The first field is a numerical number that tell's you the hashing algorithm that's being used.
+
+$1 = MD5 hashing algorithm.
+ $2 =Blowfish Algorithm is in use.
+ $2a=eksblowfish Algorithm
+ $5 =SHA-256 Algorithm
+ $6 =SHA-512 Algorithm
+ 
+ $6$5b0uEOay$H73QzACK1rV6SL  
+ 
+ en este caso tenemos un sha 512 
+ luego tenemos el segundo valor que es un salt que va entre $
+ 5b0uEOay
+ 
+ lo que sigue es hash +salt
+ 
+ 
+mas informacion de esto en https://www.slashroot.in/how-are-passwords-stored-linux-understanding-hashing-shadow-utils
+
+ahora para crackearlo se usa lo standart de siempre jhon the ripper o bien hashcat.
+luego de bruteforce a contraseña de root es 
+
+prometheus
+
+flag{e4f00638b8a10e6994e67af2f832d51c}
+
+
+Anexo:
+mas menos se ve asi en jtr
+
+./john --wordlist=/home/software/secList/Passwords/john.txt /tmp/hash.txt
+
+Using Defaul input encoding : UTF-8
+Loaded 1 password hash (sha512crypt, crypt(3) $6$ [SHA512 256/256 AVX2 4X]
+Cost 1 (iteration count) is 5000 for all loaded hashes
+Will run 4 OpenMP threads
+Press 'q'
+prometheus   (?)
+
+

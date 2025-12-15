@@ -1,0 +1,369 @@
+**************************************************
+ConsoleProcess: conhost.exe Pid: 3536
+Console: 0xa081c0 CommandHistorySize: 50
+HistoryBufferCount: 2 HistoryBufferMax: 4
+OriginalTitle: %SystemRoot%\System32\cmd.exe
+Title: Administrador: C:\Windows\System32\cmd.exe
+AttachedProcess: cmd.exe Pid: 3528 Handle: 0x5c
+----
+CommandHistory: 0x1a6190 Application: PING.EXE Flags: 
+CommandCount: 0 LastAdded: -1 LastDisplayed: -1
+FirstCommand: 0 CommandCountMax: 50
+ProcessHandle: 0x0
+----
+CommandHistory: 0x1a1eb8 Application: cmd.exe Flags: Allocated, Reset
+CommandCount: 27 LastAdded: 26 LastDisplayed: 26
+FirstCommand: 0 CommandCountMax: 50
+ProcessHandle: 0x5c
+Cmd #0 at 0x1964d0: cd ..
+Cmd #1 at 0x1820e8: cd "Program Files"
+Cmd #2 at 0x1964e8: cd ..
+Cmd #3 at 0x198168: cd ProgramData
+Cmd #4 at 0x19e908: cd MANDIANT
+Cmd #5 at 0x19f2d8: cls
+Cmd #6 at 0x19f308: dir
+Cmd #7 at 0x19e928: cd Memoryze
+Cmd #8 at 0x19f328: dir
+Cmd #9 at 0x196500: cd ..
+Cmd #10 at 0x19f338: dir
+Cmd #11 at 0x19e948: cd Memoryze
+Cmd #12 at 0x19f348: dir
+Cmd #13 at 0x196518: cd ..
+Cmd #14 at 0x19f358: dir
+Cmd #15 at 0x19e968: cd Memoryze
+Cmd #16 at 0x19f368: dir
+Cmd #17 at 0x196530: mcd ..
+Cmd #18 at 0x196548: cd ..
+Cmd #19 at 0x1a7590: cd "Archivos de programa"
+Cmd #20 at 0x19f378: dir
+Cmd #21 at 0x196560: cd ..
+Cmd #22 at 0x1a7078: cd "Program Files"
+Cmd #23 at 0x19e8e8: cd MANDIANT
+Cmd #24 at 0x19e988: cd Memoryze
+Cmd #25 at 0x198190: ping 10.0.15.20
+Cmd #26 at 0x1981e0: MemoryDD.bat
+----
+Screen 0x186340 X:80 Y:300
+Dump:
+                                                                                
+C:\ProgramData\MANDIANT>dir                                                     
+ El volumen de la unidad C no tiene etiqueta.                                   
+ El n?mero de serie del volumen es: C84C-71B0                                   
+                                                                                
+ Directorio de C:\ProgramData\MANDIANT                                          
+                                                                                
+07/08/2017  22:16    <DIR>          .                                           
+07/08/2017  22:16    <DIR>          ..                                          
+07/08/2017  22:16    <DIR>          Memoryze                                    
+               0 archivos              0 bytes                                  
+               3 dirs  23.351.869.440 bytes libres                              
+                                                                                
+C:\ProgramData\MANDIANT>cd Memoryze                                             
+                                                                                
+C:\ProgramData\MANDIANT\Memoryze>dir                                            
+ El volumen de la unidad C no tiene etiqueta.                                   
+ El n?mero de serie del volumen es: C84C-71B0                                   
+                                                                                
+ Directorio de C:\ProgramData\MANDIANT\Memoryze                                 
+                                                                                
+07/08/2017  22:16    <DIR>          .                                           
+07/08/2017  22:16    <DIR>          ..                                          
+07/08/2017  22:16               286 discovery.xml                               
+07/08/2017  22:16             2.858 MIRAgent.log                                
+07/08/2017  22:16             2.246 MIRAgent.loglite.config.xml                 
+07/08/2017  22:16            21.072 mktools.sys                                 
+07/08/2017  22:16             1.474 service.settings.xml                        
+               5 archivos         27.936 bytes                                  
+               2 dirs  23.351.869.440 bytes libres                              
+                                                                                
+C:\ProgramData\MANDIANT\Memoryze>cd ..                                          
+                                                                                
+C:\ProgramData\MANDIANT>dir                                                     
+ El volumen de la unidad C no tiene etiqueta.                                   
+ El n?mero de serie del volumen es: C84C-71B0                                   
+                                                                                
+ Directorio de C:\ProgramData\MANDIANT                                          
+                                                                                
+07/08/2017  22:16    <DIR>          .                                           
+07/08/2017  22:16    <DIR>          ..                                          
+07/08/2017  22:16    <DIR>          Memoryze                                    
+               0 archivos              0 bytes                                  
+               3 dirs  23.351.861.248 bytes libres                              
+                                                                                
+C:\ProgramData\MANDIANT>cd Memoryze                                             
+                                                                                
+C:\ProgramData\MANDIANT\Memoryze>dir                                            
+ El volumen de la unidad C no tiene etiqueta.                                   
+ El n?mero de serie del volumen es: C84C-71B0                                   
+                                                                                
+ Directorio de C:\ProgramData\MANDIANT\Memoryze                                 
+                                                                                
+07/08/2017  22:16    <DIR>          .                                           
+07/08/2017  22:16    <DIR>          ..                                          
+07/08/2017  22:16               286 discovery.xml                               
+07/08/2017  22:16             2.858 MIRAgent.log                                
+07/08/2017  22:16             2.246 MIRAgent.loglite.config.xml                 
+07/08/2017  22:16            21.072 mktools.sys                                 
+07/08/2017  22:16             1.474 service.settings.xml                        
+               5 archivos         27.936 bytes                                  
+               2 dirs  23.351.861.248 bytes libres                              
+                                                                                
+C:\ProgramData\MANDIANT\Memoryze>cd ..                                          
+                                                                                
+C:\ProgramData\MANDIANT>dir                                                     
+ El volumen de la unidad C no tiene etiqueta.                                   
+ El n?mero de serie del volumen es: C84C-71B0                                   
+                                                                                
+ Directorio de C:\ProgramData\MANDIANT                                          
+                                                                                
+07/08/2017  22:16    <DIR>          .                                           
+07/08/2017  22:16    <DIR>          ..                                          
+07/08/2017  22:16    <DIR>          Memoryze                                    
+               0 archivos              0 bytes                                  
+               3 dirs  23.351.861.248 bytes libres                              
+                                                                                
+C:\ProgramData\MANDIANT>cd Memoryze                                             
+                                                                                
+C:\ProgramData\MANDIANT\Memoryze>dir                                            
+ El volumen de la unidad C no tiene etiqueta.                                   
+ El n?mero de serie del volumen es: C84C-71B0                                   
+                                                                                
+ Directorio de C:\ProgramData\MANDIANT\Memoryze                                 
+                                                                                
+07/08/2017  22:16    <DIR>          .                                           
+07/08/2017  22:16    <DIR>          ..                                          
+07/08/2017  22:16               286 discovery.xml                               
+07/08/2017  22:16             2.858 MIRAgent.log                                
+07/08/2017  22:16             2.246 MIRAgent.loglite.config.xml                 
+07/08/2017  22:16            21.072 mktools.sys                                 
+07/08/2017  22:16             1.474 service.settings.xml                        
+               5 archivos         27.936 bytes                                  
+               2 dirs  23.351.861.248 bytes libres                              
+                                                                                
+C:\ProgramData\MANDIANT\Memoryze>mcd ..                                         
+"mcd" no se reconoce como un comando interno o externo,                         
+programa o archivo por lotes ejecutable.                                        
+                                                                                
+C:\ProgramData\MANDIANT\Memoryze>cd ..                                          
+                                                                                
+C:\ProgramData\MANDIANT>cd ..                                                   
+                                                                                
+C:\ProgramData>cd ..                                                            
+                                                                                
+C:\>cd "Archivos de programa"                                                   
+                                                                                
+C:\Archivos de programa>dir                                                     
+ El volumen de la unidad C no tiene etiqueta.                                   
+ El n?mero de serie del volumen es: C84C-71B0                                   
+                                                                                
+ Directorio de C:\Archivos de programa                                          
+                                                                                
+No se encuentra el archivo                                                      
+                                                                                
+C:\Archivos de programa>cd ..                                                   
+                                                                                
+C:\>cd "Program Files"                                                          
+                                                                                
+C:\Program Files>cd MANDIANT                                                    
+                                                                                
+C:\Program Files\MANDIANT>cd Memoryze                                           
+                                                                                
+C:\Program Files\MANDIANT\Memoryze>MemoryDD.bat                                 
+                                                                                
+C:\Program Files\MANDIANT\Memoryze>ping 10.0.15.20                              
+                                                                                
+Haciendo ping a 10.0.15.20 con 32 bytes de datos:                               
+Respuesta desde 10.0.15.20: bytes=32 tiempo<1m TTL=128                          
+                                                                                
+Estad?sticas de ping para 10.0.15.20:                                           
+    Paquetes: enviados = 1, recibidos = 1, perdidos = 0                         
+    (0% perdidos),                                                              
+Tiempos aproximados de ida y vuelta en milisegundos:                            
+    M?nimo = 0ms, M?ximo = 0ms, Media = 0ms                                     
+Control-C                                                                       
+^C                                                                              
+C:\Program Files\MANDIANT\Memoryze>MemoryDD.bat                                 
+Memoryze.exe by MANDIANT (c) 2011 - http://www.mandiant.com/products/free_softwa
+re/memoryze/                                                                    
+   Usage: MemoryDD.bat                                                          
+     -offset   optional offset into physical memory. Exclude for all.           
+     -size     optional size of physical memory to acquire. Exclude for all.    
+     -output   directory to write the results. Default .\Audits                 
+C:\Program Files\MANDIANT\Memoryze>                                             
+**************************************************
+ConsoleProcess: conhost.exe Pid: 3920
+Console: 0xa081c0 CommandHistorySize: 50
+HistoryBufferCount: 2 HistoryBufferMax: 4
+OriginalTitle: %SystemRoot%\system32\cmd.exe
+Title: C:\Windows\system32\cmd.exe
+AttachedProcess: cmd.exe Pid: 2232 Handle: 0x5c
+----
+CommandHistory: 0x285fb0 Application: NETSTAT.EXE Flags: 
+CommandCount: 0 LastAdded: -1 LastDisplayed: -1
+FirstCommand: 0 CommandCountMax: 50
+ProcessHandle: 0x0
+----
+CommandHistory: 0x280e88 Application: cmd.exe Flags: Allocated, Reset
+CommandCount: 1 LastAdded: 0 LastDisplayed: 0
+FirstCommand: 0 CommandCountMax: 50
+ProcessHandle: 0x5c
+Cmd #0 at 0x27e858: netstat -an
+----
+Screen 0x266338 X:80 Y:300
+Dump:
+Microsoft Windows [Versi?n 6.1.7601]                                            
+Copyright (c) 2009 Microsoft Corporation. Reservados todos los derechos.        
+                                                                                
+C:\Users\Marcus>netstat -an                                                     
+                                                                                
+Conexiones activas                                                              
+                                                                                
+  Proto  Direcci?n local        Direcci?n remota       Estado                   
+  TCP    0.0.0.0:135            0.0.0.0:0              LISTENING                
+  TCP    0.0.0.0:445            0.0.0.0:0              LISTENING                
+  TCP    0.0.0.0:49152          0.0.0.0:0              LISTENING                
+  TCP    0.0.0.0:49153          0.0.0.0:0              LISTENING                
+  TCP    0.0.0.0:49154          0.0.0.0:0              LISTENING                
+  TCP    0.0.0.0:49155          0.0.0.0:0              LISTENING                
+  TCP    0.0.0.0:49156          0.0.0.0:0              LISTENING                
+  TCP    0.0.0.0:49157          0.0.0.0:0              LISTENING                
+  TCP    10.0.15.100:139        0.0.0.0:0              LISTENING                
+  TCP    127.0.0.1:49159        127.0.0.1:49160        ESTABLISHED              
+  TCP    127.0.0.1:49160        127.0.0.1:49159        ESTABLISHED              
+  TCP    127.0.0.1:49161        127.0.0.1:49162        ESTABLISHED              
+  TCP    127.0.0.1:49162        127.0.0.1:49161        ESTABLISHED              
+  TCP    [::]:135               [::]:0                 LISTENING                
+  TCP    [::]:445               [::]:0                 LISTENING                
+  TCP    [::]:49152             [::]:0                 LISTENING                
+  TCP    [::]:49153             [::]:0                 LISTENING                
+  TCP    [::]:49154             [::]:0                 LISTENING                
+  TCP    [::]:49155             [::]:0                 LISTENING                
+  TCP    [::]:49156             [::]:0                 LISTENING                
+  TCP    [::]:49157             [::]:0                 LISTENING                
+  UDP    0.0.0.0:500            *:*                                             
+  UDP    0.0.0.0:4500           *:*                                             
+  UDP    0.0.0.0:5355           *:*                                             
+  UDP    10.0.15.100:137        *:*                                             
+  UDP    10.0.15.100:138        *:*                                             
+  UDP    10.0.15.100:1900       *:*                                             
+  UDP    10.0.15.100:52904      *:*                                             
+  UDP    127.0.0.1:1900         *:*                                             
+  UDP    127.0.0.1:52905        *:*                                             
+  UDP    [::]:500               *:*                                             
+  UDP    [::]:4500              *:*                                             
+  UDP    [::]:5355              *:*                                             
+  UDP    [::1]:1900             *:*                                             
+  UDP    [::1]:52903            *:*                                             
+  UDP    [fe80::b163:aef4:ac84:d341%11]:546  *:*                                
+  UDP    [fe80::b163:aef4:ac84:d341%11]:1900  *:*                               
+  UDP    [fe80::b163:aef4:ac84:d341%11]:52902  *:*                              
+                                                                                
+C:\Users\Marcus>netstat -an                                                     
+                                                                                
+Conexiones activas                                                              
+                                                                                
+  Proto  Direcci?n local        Direcci?n remota       Estado                   
+  TCP    0.0.0.0:135            0.0.0.0:0              LISTENING                
+  TCP    0.0.0.0:445            0.0.0.0:0              LISTENING                
+  TCP    0.0.0.0:8080           0.0.0.0:0              LISTENING                
+  TCP    0.0.0.0:49152          0.0.0.0:0              LISTENING                
+  TCP    0.0.0.0:49153          0.0.0.0:0              LISTENING                
+  TCP    0.0.0.0:49154          0.0.0.0:0              LISTENING                
+  TCP    0.0.0.0:49155          0.0.0.0:0              LISTENING                
+  TCP    0.0.0.0:49156          0.0.0.0:0              LISTENING                
+  TCP    10.0.15.100:139        0.0.0.0:0              LISTENING                
+  TCP    127.0.0.1:49159        127.0.0.1:49160        ESTABLISHED              
+  TCP    127.0.0.1:49160        127.0.0.1:49159        ESTABLISHED              
+  TCP    127.0.0.1:49161        127.0.0.1:49162        ESTABLISHED              
+  TCP    127.0.0.1:49162        127.0.0.1:49161        ESTABLISHED              
+  TCP    [::]:135               [::]:0                 LISTENING                
+  TCP    [::]:445               [::]:0                 LISTENING                
+  TCP    [::]:49152             [::]:0                 LISTENING                
+  TCP    [::]:49153             [::]:0                 LISTENING                
+  TCP    [::]:49154             [::]:0                 LISTENING                
+  TCP    [::]:49155             [::]:0                 LISTENING                
+  TCP    [::]:49156             [::]:0                 LISTENING                
+  UDP    0.0.0.0:500            *:*                                             
+  UDP    0.0.0.0:4500           *:*                                             
+  UDP    0.0.0.0:5355           *:*                                             
+  UDP    10.0.15.100:137        *:*                                             
+  UDP    10.0.15.100:138        *:*                                             
+  UDP    10.0.15.100:1900       *:*                                             
+  UDP    10.0.15.100:52904      *:*                                             
+  UDP    127.0.0.1:1900         *:*                                             
+  UDP    127.0.0.1:52905        *:*                                             
+  UDP    [::]:500               *:*                                             
+  UDP    [::]:4500              *:*                                             
+  UDP    [::]:5355              *:*                                             
+  UDP    [::1]:1900             *:*                                             
+  UDP    [::1]:52903            *:*                                             
+  UDP    [fe80::b163:aef4:ac84:d341%11]:1900  *:*                               
+  UDP    [fe80::b163:aef4:ac84:d341%11]:52902  *:*                              
+                                                                                
+C:\Users\Marcus>                                                                
+**************************************************
+ConsoleProcess: conhost.exe Pid: 336
+Console: 0xa081c0 CommandHistorySize: 50
+HistoryBufferCount: 1 HistoryBufferMax: 4
+OriginalTitle: C:\Program Files\MANDIANT\Memoryze\Memoryze.exe
+Title: C:\Program Files\MANDIANT\Memoryze\Memoryze.exe
+AttachedProcess: Memoryze.exe Pid: 3588 Handle: 0x5c
+----
+CommandHistory: 0x61e68 Application: Memoryze.exe Flags: Allocated
+CommandCount: 0 LastAdded: -1 LastDisplayed: -1
+FirstCommand: 0 CommandCountMax: 50
+ProcessHandle: 0x5c
+----
+Screen 0x46370 X:80 Y:300
+Dump:
+Changed permissions to admin-only on application data directory.                
+Using settings file C:\ProgramData\MANDIANT\Memoryze\service.settings.xml       
+MANDIANT Intelligent Response Agent 3.0.0                                       
+Running as: MKU\(Unknown User)                                                  
+Audit Modules:                                                                  
+     w32memory-acquisition, 1.4.36.0                                            
+     w32processes-memory, 2.1.8.0                                               
+     w32drivers-signature, 2.1.4.0                                              
+     w32drivers-modulelist, 1.4.46.0                                            
+     w32kernel-hookdetection, 1.4.46.0                                          
+     w32processes-memoryacquire, 1.4.62.0                                       
+     w32driver-memoryacquire, 1.4.40.0                                          
+Filter Modules:                                                                 
+     xpath, 1.4.36.0                                                            
+     xpath2v2, 1.4.36.0                                                         
+     regex, 1.4.36.0                                                            
+     regexv2, 1.4.36.0                                                          
+Service Modules:                                                                
+     w32rawfilesystem, 1.4.36.0                                                 
+     w32security, 1.4.36.0                                                      
+MANDIANT Intelligent Response Agent 3.0.0 running as MKU\(Unknown User)         
+                                                                                
+                                                                                
+The uninstall has completed.                                                    
+Installing and starting MIR Agent driver.                                       
+Adding service Mandiant_Tools.                                                  
+Creating service: Mandiant_Tools, Mandiant_Tools, Mandiant_Tools, C:\ProgramData
+\MANDIANT\Memoryze\mktools.sys                                                  
+The install has completed.                                                      
+Starting service succeeded.                                                     
+Service start has completed.                                                    
+Loading the script from 'C:\Program Files\MANDIANT\Memoryze\out.txt'.           
+Beginning local audit.                                                          
+Audit started 08-07-2017 22:22:59                                               
+Checking if 'C:\Program Files\MANDIANT\Memoryze\Audits\MKU\20170807202259' exist
+s...                                                                            
+Saving batch result to 'C:\Program Files\MANDIANT\Memoryze\Audits\MKU\2017080720
+2259\'.                                                                         
+Batch results written to 'C:\Program Files\MANDIANT\Memoryze\Audits\MKU\20170807
+202259\'.                                                                       
+Auditing (w32memory-acquisition) started 08-07-2017 22:22:59                    
+Executing command for internal module w32memory-acquisition, 1.3.22.2           
+<Issue number="0" level="Info" summary="System range 0x0000000000000000 - 0x0000
+00000009f000" context="EnumerateDevices"/>                                      
+                                                                                
+<Issue number="0" level="Info" summary="System range 0x0000000000100000 - 0x0000
+00001fff0000" context="EnumerateDevices"/>                                      
+                                                                                
+<Issue number="7022" level="Warning" summary="Unable to read memory page(s)Inval
+id address range 0x000000000009f000 - 0x00000000000ff000" context="MapPhysicalMe
+mory"/>                                                                         

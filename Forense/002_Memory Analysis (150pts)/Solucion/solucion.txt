@@ -1,0 +1,288 @@
+## Solution
+We start with the unzip of 
+
+hay que comenzar desempacando, resulta un archivo de imagen
+ "memory.1221191d.img" con md5 "e246159a7a2c8e154da193bd07457759"
+
+el hader refiere algo como esto:
+
+	$ file memory.1221191d.img
+	memory.1221191d.img: data
+	
+	$ hd memory.1221191d.img | head
+	00000000  53 ff 00 f0 53 ff 00 f0  53 ff 00 f0 53 ff 00 f0  |S...S...S...S...|
+	00000010  53 ff 00 f0 53 ff 00 f0  d6 e9 00 f0 53 ff 00 f0  |S...S.......S...|
+	00000020  a5 fe 00 f0 87 e9 00 f0  53 ff 00 f0 46 e7 00 f0  |........S...F...|
+	00000030  46 e7 00 f0 46 e7 00 f0  57 ef 00 f0 53 ff 00 f0  |F...F...W...S...|
+	00000040  22 00 00 c0 4d f8 00 f0  41 f8 00 f0 fe e3 00 f0  |"...M...A.......|
+	00000050  39 e7 00 f0 59 f8 00 f0  2e e8 00 f0 d4 ef 00 f0  |9...Y...........|
+	00000060  a4 f0 00 f0 f2 e6 00 f0  6e fe 00 f0 53 ff 00 f0  |........n...S...|
+	00000070  ed ef 00 f0 53 ff 00 f0  c7 ef 00 f0 ed 57 00 c0  |....S........W..|
+	00000080  53 ff 00 f0 53 ff 00 f0  53 ff 00 f0 53 ff 00 f0  |S...S...S...S...|
+	
+chekeando que podria ser ( volatility imageinfo):
+
+```
+$ volatility -f memory.1221191d.img imageinfo
+
+Volatility Foundation Volatility Framework 2.6
+INFO    : volatility.debug    : Determining profile based on KDBG search...
+          Suggested Profile(s) : Win7SP1x86_23418, Win7SP0x86, Win7SP1x86
+                     AS Layer1 : IA32PagedMemory (Kernel AS)
+                     AS Layer2 : FileAddressSpace (/home/CTF/atenea.ccn-cert.cni.es/forense/02_memory-analysis/memory.1221191d.img)
+                      PAE type : No PAE
+                           DTB : 0x185000L
+                          KDBG : 0x82923ea8L
+          Number of Processors : 1
+     Image Type (Service Pack) : 1
+                KPCR for CPU 0 : 0x82924d00L
+             KUSER_SHARED_DATA : 0xffdf0000L
+           Image date and time : 2017-08-07 20:23:00 UTC+0000
+     Image local date and time : 2017-08-07 22:23:00 +0200
+```
+asi que tenemos un windows 7 sp1 x86  Single clore, asi que un perfil de Win7SP1x86_23418 basta y sobra
+
+informacion de lo que funcionaba:
+	$ volatility -f memory.1221191d.img --profile=Win7SP1x86_23418 pslist --output-file=memory.1221191d.img.pslist.txt
+	$ volatility -f memory.1221191d.img --profile=Win7SP1x86_23418 psscan --output-file=memory.1221191d.img.psscan.txt
+	
+lo que ocupaba en consola
+ conhost.exe:
+
+	$ volatility -f memory.1221191d.img --profile=Win7SP1x86_23418 consoles --output-file=memory.1221191d.img.consoles.txt
+	
+	asi que ahora a ver el tcp  y netstat :
+	refiere algunos puertos abiertos, usados por netbios, SMB y CIFS 
+	
+
+```
+Offset(P)          Proto    Local Address                  Foreign Address      State            Pid      Owner          Created
+0x1e10ff50         UDPv4    10.0.15.100:1900               *:*                                   3956     svchost.exe    2017-08-07 20:1
+4:48 UTC+0000
+0x1e126830         UDPv4    10.0.15.100:52904              *:*                                   3956     svchost.exe    2017-08-07 20:1
+4:48 UTC+0000
+0x1e127800         UDPv6    ::1:52903                      *:*                                   3956     svchost.exe    2017-08-07 20:1
+4:48 UTC+0000
+0x1e135508         UDPv4    127.0.0.1:1900                 *:*                                   3956     svchost.exe    2017-08-07 20:1
+4:48 UTC+0000
+0x1e1c46d0         UDPv4    127.0.0.1:52905                *:*                                   3956     svchost.exe    2017-08-07 20:1
+4:48 UTC+0000
+0x1e210490         UDPv4    0.0.0.0:0                      *:*                                   1224     svchost.exe    2017-08-07 20:1
+2:41 UTC+0000
+0x1e210490         UDPv6    :::0                           *:*                                   1224     svchost.exe    2017-08-07 20:1
+2:41 UTC+0000
+0x1e2139f0         UDPv4    0.0.0.0:5355                   *:*                                   1224     svchost.exe    2017-08-07 20:1
+2:41 UTC+0000
+0x1e2139f0         UDPv6    :::5355                        *:*                                   1224     svchost.exe    2017-08-07 20:1
+2:41 UTC+0000
+0x1e213f50         UDPv4    0.0.0.0:5355                   *:*                                   1224     svchost.exe    2017-08-07 20:1
+2:41 UTC+0000
+0x1e2e7b60         UDPv4    0.0.0.0:500                    *:*                                   960      svchost.exe    2017-08-07 20:1
+2:42 UTC+0000
+0x1e2e7b60         UDPv6    :::500                         *:*                                   960      svchost.exe    2017-08-07 20:1
+2:42 UTC+0000
+0x1e2f7418         UDPv4    0.0.0.0:0                      *:*                                   232      svchost.exe    2017-08-07 20:1
+2:43 UTC+0000
+0x1e31bcf0         UDPv4    0.0.0.0:4500                   *:*                                   960      svchost.exe    2017-08-07 20:1
+2:42 UTC+0000
+0x1e31ce38         UDPv4    0.0.0.0:0                      *:*                                   960      svchost.exe    2017-08-07 20:1
+2:42 UTC+0000
+0x1e33a100         UDPv4    0.0.0.0:0                      *:*                                   960      svchost.exe    2017-08-07 20:1
+2:42 UTC+0000
+0x1e33a100         UDPv6    :::0                           *:*                                   960      svchost.exe    2017-08-07 20:1
+2:42 UTC+0000
+0x1e5f7228         UDPv6    fe80::b163:aef4:ac84:d341:1900 *:*                                   3956     svchost.exe    2017-08-07 20:1
+4:48 UTC+0000
+0x1e6022c0         UDPv4    0.0.0.0:0                      *:*                                   232      svchost.exe    2017-08-07 20:1
+2:43 UTC+0000
+0x1e6022c0         UDPv6    :::0                           *:*                                   232      svchost.exe    2017-08-07 20:1
+2:43 UTC+0000
+0x1e727d40         UDPv6    fe80::b163:aef4:ac84:d341:52902 *:*                                   3956     svchost.exe    2017-08-07 20:
+14:48 UTC+0000
+0x1e793f50         UDPv6    ::1:1900                       *:*                                   3956     svchost.exe    2017-08-07 20:1
+4:48 UTC+0000
+0x1e8d5588         UDPv4    0.0.0.0:0                      *:*                                   660      VBoxService.ex 2017-08-07 20:2
+3:00 UTC+0000
+0x1e0c37a8         TCPv4    0.0.0.0:49153                  0.0.0.0:0            LISTENING        760      svchost.exe    
+0x1e0c37a8         TCPv6    :::49153                       :::0                 LISTENING        760      svchost.exe    
+0x1e111168         TCPv4    0.0.0.0:135                    0.0.0.0:0            LISTENING        712      svchost.exe    
+0x1e112bb0         TCPv4    0.0.0.0:135                    0.0.0.0:0            LISTENING        712      svchost.exe    
+0x1e112bb0         TCPv6    :::135                         :::0                 LISTENING        712      svchost.exe    
+0x1e11e970         TCPv4    0.0.0.0:49152                  0.0.0.0:0            LISTENING        380      wininit.exe    
+0x1e11f378         TCPv4    0.0.0.0:49152                  0.0.0.0:0            LISTENING        380      wininit.exe    
+0x1e11f378         TCPv6    :::49152                       :::0                 LISTENING        380      wininit.exe    
+0x1e1494b0         TCPv4    0.0.0.0:49153                  0.0.0.0:0            LISTENING        760      svchost.exe    
+0x1e254728         TCPv4    0.0.0.0:49154                  0.0.0.0:0            LISTENING        960      svchost.exe    
+0x1e256b78         TCPv4    0.0.0.0:49154                  0.0.0.0:0            LISTENING        960      svchost.exe    
+0x1e256b78         TCPv6    :::49154                       :::0                 LISTENING        960      svchost.exe    
+0x1e30a7b8         TCPv4    0.0.0.0:49156                  0.0.0.0:0            LISTENING        232      svchost.exe    
+0x1e30a7b8         TCPv6    :::49156                       :::0                 LISTENING        232      svchost.exe    
+0x1e380618         TCPv4    0.0.0.0:445                    0.0.0.0:0            LISTENING        4        System         
+0x1e380618         TCPv6    :::445                         :::0                 LISTENING        4        System         
+0x1e3870b0         TCPv4    0.0.0.0:49155                  0.0.0.0:0            LISTENING        472      services.exe   
+0x1e3870b0         TCPv6    :::49155                       :::0                 LISTENING        472      services.exe   
+0x1e387758         TCPv4    0.0.0.0:49155                  0.0.0.0:0            LISTENING        472      services.exe   
+0x1e5ea980         TCPv4    0.0.0.0:8080                   0.0.0.0:0            LISTENING        300      rundll32.exe   
+0x1e60d080         TCPv4    0.0.0.0:49156                  0.0.0.0:0            LISTENING        232      svchost.exe    
+0x1e3296a8         TCPv4    127.0.0.1:49162                127.0.0.1:49161      ESTABLISHED      -1                      
+0x1e32d508         TCPv4    127.0.0.1:49161                127.0.0.1:49162      ESTABLISHED      -1                      
+0x1e721ca0         TCPv4    127.0.0.1:49159                127.0.0.1:49160      ESTABLISHED      -1                      
+0x1e724008         TCPv4    127.0.0.1:49160                127.0.0.1:49159      ESTABLISHED      -1                      
+0x1edd33f8         UDPv4    0.0.0.0:500                    *:*                                   960      svchost.exe    2017-08-07 20:1
+2:42 UTC+0000
+0x1edd3e98         UDPv4    0.0.0.0:4500                   *:*                                   960      svchost.exe    2017-08-07 20:1
+2:42 UTC+0000
+0x1edd3e98         UDPv6    :::4500                        *:*                                   960      svchost.exe    2017-08-07 20:1
+2:42 UTC+0000
+0x1ee5f580         UDPv4    10.0.15.100:138                *:*                                   4        System         2017-08-07 20:1
+2:38 UTC+0000
+0x1ee91330         UDPv4    10.0.15.100:137                *:*                                   4        System         2017-08-07 20:1
+2:38 UTC+0000
+0x1ee7b930         TCPv4    10.0.15.100:139                0.0.0.0:0            LISTENING        4        System         
+0x1f8ff908         UDPv4    0.0.0.0:0                      *:*                                   2272     firefox.exe    2017-08-07 20:1
+9:19 UTC+0000
+0x1f8ff908         UDPv6    :::0                           *:*                                   2272     firefox.exe    2017-08-07 20:1
+9:19 UTC+0000
+```
+
+el llamativo es el id300 (rundll32.exe)  , tiene abierto el puerto 8080, haciendo alusion tarde o temprano a un ataque lan, llamado DoblePulsar
+(https://zerosum0x0.blogspot.mx/2017/04/doublepulsar-initial-smb-backdoor-ring.html)
+
+
+verificando
+
+ 
+
+	
+	 DoublePulsar, codigos MS17-010 y CVE-2017-0143 
+
+	https://www.rapid7.com/db/modules/auxiliary/scanner/smb/smb_ms17_010
+	https://www.rapid7.com/db/modules/exploit/windows/smb/ms17_010_eternalblue
+
+ahora la bandera
+
+	$ printf "CVE-2017-0143" | md5sum
+	f11fa97bbd952a3146ffbddd59276c1d
+	
+	
+	
+	anexos 
+	->
+probando:
+	
+	https://github.com/BorjaMerino/DoublePulsar-Volatility
+	
+advertencia:
+
+	$ volatility --plugins="DoublePulsar-Volatility" -f memory.1221191d.img --profile=Win7SP1x86_23418  doublepulsar -D /tmp/doublepulsar 
+	Volatility Foundation Volatility Framework 2.6
+	Ptr        Module       Section     
+	---------- ------------ ------------
+	ERROR   : volatility.debug    : The pdb file could not be downloaded. Try it with the PDB_FILE option.
+	
+	error y ahora a extraer el driver:
+	$  volatility -f memory.1221191d.img --profile=Win7SP1x86_23418 modscan | grep srv.sys
+	Volatility Foundation Volatility Framework 2.6
+	0x000000001e35dec8 srv.sys              0x90ec2000    0x52000 \SystemRoot\System32\DRIVERS\srv.sys
+
+	$ volatility -f memory.1221191d.img --profile=Win7SP1x86_23418 moddump -b 0x90ec2000 -D .
+	Volatility Foundation Volatility Framework 2.6
+	Module Base Module Name          Result
+	----------- -------------------- ------
+	0x090ec2000 srv.sys              OK: driver.90ec2000.sys
+	
+	$ rabin2 -PP driver.90ec2000.sys 
+	curl exited with error 1
+	Falling back to uncompressed pdb
+	PDB "srv.pdb" download success
+	
+corriendolo:
+
+	$ volatility --plugins="DoublePulsar-Volatility" -f memory.1221191d.img --profile=Win7SP1x86_23418  doublepulsar -D /tmp/doublepulsar --pdb_file=srv.pdb
+	Volatility Foundation Volatility Framework 2.6
+	Ptr        Module       Section     
+	---------- ------------ ------------
+	0x90efb6de srv.sys      PAGE        
+	0x90ef6153 srv.sys      PAGE        
+	0x90ef61dc srv.sys      PAGE        
+	0x90ef8bf8 srv.sys      PAGE        
+	0x90ef9462 srv.sys      PAGE        
+	0x90eefff3 srv.sys      PAGE        
+	0x90ef0d02 srv.sys      PAGE        
+	0x90eef80a srv.sys      PAGE        
+	0x90ef05eb srv.sys      PAGE        
+	0x90ef9654 srv.sys      PAGE        
+	0x90ef6ae9 srv.sys      PAGE        
+	0x90ef9654 srv.sys      PAGE        
+	0x90ef9654 srv.sys      PAGE        
+	0x90ef175e srv.sys      PAGE        
+	0x8402b048 UNKNOWN                  
+	0x90efc09a srv.sys      PAGE        
+	0x90ee218f srv.sys      PAGE
+	
+verifica un poco mas:
+
+	$ volatility --plugins="DoublePulsar-Volatility" -f memory.1221191d.img --profile=Win7SP1x86_23418 volshell
+	Volatility Foundation Volatility Framework 2.6
+	Current context: System @ 0x83f2fba0, pid=4, ppid=0 DTB=0x185000
+	Python 2.7.14+ (default, Dec  5 2017, 15:17:02) 
+	Type "copyright", "credits" or "license" for more information.
+	
+	IPython 5.5.0 -- An enhanced Interactive Python.
+	?         -> Introduction and overview of IPython's features.
+	%quickref -> Quick reference.
+	help      -> Python's own help system.
+	object?   -> Details about 'object', use 'object??' for extra details.
+	
+	In [1]: dis(0x8402b048)
+	0x8402b048 8b4c2408                         MOV ECX, [ESP+0x8]
+	0x8402b04c 60                               PUSHA
+	0x8402b04d e800000000                       CALL 0x8402b052
+	0x8402b052 5d                               POP EBP
+	0x8402b053 6681e500f0                       AND BP, 0xf000
+	0x8402b058 894d34                           MOV [EBP+0x34], ECX
+	0x8402b05b e8d9010000                       CALL 0x8402b239
+	0x8402b060 e843010000                       CALL 0x8402b1a8
+	0x8402b065 e87f010000                       CALL 0x8402b1e9
+	0x8402b06a 85c0                             TEST EAX, EAX
+	0x8402b06c 0f84e3000000                     JZ 0x8402b155
+	0x8402b072 8b5d3c                           MOV EBX, [EBP+0x3c]
+	0x8402b075 8b4bd8                           MOV ECX, [EBX-0x28]
+	0x8402b078 e817010000                       CALL 0x8402b194
+	0x8402b07d 3c23                             CMP AL, 0x23
+	0x8402b07f 740d                             JZ 0x8402b08e
+	0x8402b081 3c77                             CMP AL, 0x77
+	0x8402b083 741c                             JZ 0x8402b0a1
+	0x8402b085 3cc8                             CMP AL, 0xc8
+	0x8402b087 7422                             JZ 0x8402b0ab
+	0x8402b089 e9b6000000                       JMP 0x8402b144
+	0x8402b08e 8b4d38                           MOV ECX, [EBP+0x38]
+	0x8402b091 8b4524                           MOV EAX, [EBP+0x24]
+	0x8402b094 89410e                           MOV [ECX+0xe], EAX
+	0x8402b097 31c0                             XOR EAX, EAX
+	0x8402b099 884112                           MOV [ECX+0x12], AL
+	0x8402b09c e99f000000                       JMP 0x8402b140
+	0x8402b0a1 e813010000                       CALL 0x8402b1b9
+	0x8402b0a6 e9b5000000                       JMP 0x8402b160
+	0x8402b0ab 8b5d3c                           MOV EBX, [EBP+0x3c]
+	0x8402b0ae 8b43e8                           MOV EAX, [EBX-0x18]
+	0x8402b0b1 8b30                             MOV ESI, [EAX]
+	0x8402b0b3 337528                           XOR ESI, [EBP+0x28]
+	0x8402b0b6 8b7808                           MOV EDI, [EAX+0x8]
+	0x8402b0b9 337d28                           XOR EDI, [EBP+0x28]
+	0x8402b0bc 8b4004                           MOV EAX, [EAX+0x4]
+	0x8402b0bf 334528                           XOR EAX, [EBP+0x28]
+	0x8402b0c2 3b4310                           CMP EAX, [EBX+0x10]
+	0x8402b0c5 89c3                             MOV EBX, EAX
+	0x8402b0c7 75                               DB 0x75
+
+encontrando los opcodes tipicos del evento doblepulsar.
+
+	0x8402b07d 3c23                             CMP AL, 0x23 # ping
+	0x8402b07f 740d                             JZ 0x8402b08e
+	0x8402b081 3c77                             CMP AL, 0x77 # exec
+	0x8402b083 741c                             JZ 0x8402b0a1
+	0x8402b085 3cc8                             CMP AL, 0xc8 # kill
+	0x8402b087 7422                             JZ 0x8402b0ab
+	
+ 
