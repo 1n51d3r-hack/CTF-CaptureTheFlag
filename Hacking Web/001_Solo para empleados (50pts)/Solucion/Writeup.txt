@@ -1,0 +1,29 @@
+El reto es ser de la web de cert.cni.es 
+
+, entonces uno viene x-fordwarded for desde el sitio
+entonces :
+
+X-Forwarded-For: IP de ccn-cert.cni.es
+
+el principio es
+https://stackoverflow.com/questions/33818540/how-to-get-the-first-client-ip-from-x-forwarded-for-behind-nginx-gunicorn
+
+que la ip validada es desde ese valor :)
+
+
+para comenzar con la ip
+C:\Users\PC>ping www.ccn-cert.cni.es
+
+Haciendo ping a ryhf5ey.x.incapdns.net [107.154.60.234] con 32 bytes de datos:
+Respuesta desde 107.154.60.234: bytes=32 tiempo=203ms TTL=49
+Respuesta desde 107.154.60.234: bytes=32 tiempo=101ms TTL=49
+Respuesta desde 107.154.60.234: bytes=32 tiempo=128ms TTL=49
+Respuesta desde 107.154.60.234: bytes=32 tiempo=107ms TTL=49
+
+Estadísticas de ping para 107.154.60.234:
+    Paquetes: enviados = 4, recibidos = 4, perdidos = 0
+    (0% perdidos),
+Tiempos aproximados de ida y vuelta en milisegundos:
+    Mínimo = 101ms, Máximo = 203ms, Media = 134ms
+	
+	

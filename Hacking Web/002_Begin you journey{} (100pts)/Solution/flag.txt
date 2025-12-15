@@ -1,0 +1,4 @@
+printf randomflagforbabyweblevel1 | md5sum
+
+
+flag{9042f674880629915f76cfd06137cfc4}

