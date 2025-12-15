@@ -1,0 +1,3 @@
+  printf "outzdfhgy8uj" | md5sum
+  59998624d312675f25095962f5da5af4  -
+  flag{59998624d312675f25095962f5da5af4}

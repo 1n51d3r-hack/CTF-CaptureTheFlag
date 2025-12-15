@@ -1,0 +1,35 @@
+en general se tratan se seguir analizando via wireshark y otras herramientas disponibles
+
+esta es una vulnerabilidad encontrada por Stephane Chazelas, el CVE-2014-6271 y en resumen se basa en la posibilidad de crear variables de entorno con código que puede ser ejecutado después de una función y antes de llamar al shell de bash. 
+
+Al igual que los lenguajes de programación "reales" Bash tiene funciones, aunque de una aplicación un tanto limitada, y también es posible poner estas funciones de bash en las variables de entorno. El fallo está cuando se añade código adicional al final de estas definiciones de funciones (dentro de la variable environment) porque bash sigue ejecutando o parseando estos comandos. Algo así como:
+
+$ env x='() { :;}; echo vulnerable' bash -c "echo this is a test"
+ vulnerable
+ this is a test
+
+El resultado afecta a numerosos contextos:
+
+- ForceCommand se utiliza en sshd para limitar las capacidades de ejecución de comandos a los usuarios remotos. Algunas implementaciones de Git y Subversion utilizan estos shells restringidos aunque a OpenSSH no le afecta ya que los usuarios ya tienen acceso a la consola.
+
+- El servidor Apache usando mod_cgi o mod_cgid se ve afectado si los scripts CGI están escritos en bash, o propagan subshells. Dependiendo del comando un shell puede llamar a otros subshells si implicitamente utiliza system/popen en C, os.system/os.popen en Python, system/exec en PHP (cuando se ejecuta en modo CGI) y open/system en Perl.
+
+- Los scripts PHP ejecutados con mod_php no se ven afectados aunque se creen subshells.
+
+- Los clientes DHCP invocan scripts de shell para configurar el sistema, con valores tomados de un servidor potencialmente malicioso. Esto permitiría ejecutar arbitrariamente comandos, normalmente como root, en el equipo cliente DHCP.
+
+- Varios demonios y programas con privilegios SUID pueden ejecutar scripts de shell con los valores de variables de entorno establecidas/ modificados por el usuario, lo que permitiría ejecutar comandos arbitrarios.
+
+- Cualquier otra aplicación que hookea un shell o ejecuta un script de shell con bash como intérprete. Los scripts de shell que no exportan variables no son vulnerables a este problema, incluso si ellos procesan contenido no confiable y la almacenan en variables (dejados) de shell y subshells abiertos.
+
+Ya se han publicado parches que corrigen este fallo, con los que se asegura de que no se permite código después del final de una función bash. Así que si ejecutamos el ejemplo anterior con la versión parcheada de bash, obtendremos la siguiente salida:
+
+ $ env x='() { :;}; echo vulnerable' bash -c "echo this is a test"
+ bash: warning: x: ignoring function definition attempt
+ bash: error importing function definition for `x'
+ this is a test
+ 
+ 
+ 
+ 
+ 
