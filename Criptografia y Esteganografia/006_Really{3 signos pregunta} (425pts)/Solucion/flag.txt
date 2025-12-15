@@ -1,0 +1,3 @@
+printf "groggrog"| md5sum
+58dfa0d5ab71d72f03cef779e9c7537b  -
+flag{58dfa0d5ab71d72f03cef779e9c7537b}

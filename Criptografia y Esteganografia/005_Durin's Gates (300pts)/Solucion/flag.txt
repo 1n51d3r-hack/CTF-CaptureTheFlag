@@ -1,0 +1,3 @@
+printf "Minas_Tirith_2017" | md5sum
+c486904231261cc28cbff2f4ce7d6126  -
+flag{c486904231261cc28cbff2f4ce7d6126}

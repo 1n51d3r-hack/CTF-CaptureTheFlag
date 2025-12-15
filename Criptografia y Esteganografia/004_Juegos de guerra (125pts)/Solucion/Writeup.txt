@@ -1,0 +1,15 @@
+1- exif d2FyZ2FtZXMK-d2414dd3b174b6503d59a113c6f02537).jpg 
+con este comando analizamos la imagen con exif y podemos encontrar en la metadata que contiene una diapositiva para extraerla aumentandole el parametro -e
+exif -e d2FyZ2FtZXMK-d2414dd3b174b6503d59a113c6f02537).jpg 
+ obtuvimos una nueva imagen 
+
+2- analizamos la imagen con exif y podemos encontrar que contiene una diapositiva mas 
+exif -e d2FyZ2FtZXMK-d2414dd3b174b6503d59a113c6f02537\(1\).jpg.modified.jpeg 
+
+3- luego de analizar la metadata de las ultimas dos imagenes podemos observar que tenemos longitud y latitud de unas cordenadas 
+
+4- https://www.coordenadas-gps.com/ utilizamos una pagina de gps cualquier y colocamos las cordenadas ,nos lleva a un punto, 
+pondremos la version satelite y nos acercaremos al maximo asi encontraremos la flag y ganaremos la guerra 
+el flag correcto entonces es 
+flag{0a8459aa738b0a4faa05b8ef091810f4}
+

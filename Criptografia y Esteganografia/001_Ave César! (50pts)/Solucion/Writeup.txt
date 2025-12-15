@@ -1,0 +1,8 @@
+Herramienta usada: Cryptotool
+https://www.cryptool.org/de/
+
+se encuentra el texto, al buscar se redacta la flag y eso es todo :)
+
+
+la otra es hacer los root y verificar, en python, confirmo que es root15 
+;)

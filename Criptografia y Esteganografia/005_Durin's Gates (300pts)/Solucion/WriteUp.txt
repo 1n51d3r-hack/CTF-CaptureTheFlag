@@ -1,0 +1,35 @@
+Esto es para largo
+primero revisamos la metadata de la imagen y verificamos si no hay archivos ocultos dentro 
+
+1- exif doors_of_durin.jpg es el comando que usamos en la imagen, nos damos cuenta en la metadata que en la etiqueta Artista hay algo extraño 
+68913499125FAA y en el posicionamiento algo extra CbC esto nos ayudara mas tarde  lo guardo como 0.jpg para mas claro.
+
+
+2-steghide extract -sf doors_of_durin.jpg es el comando que usamos en la imagen ,nos pide una contraseña en la imagen vemos una frase del señor 
+de los anillos y la puerta de durin, si revisamos la pelicula o el libro veremos que la contraseña es amigo en elfico "Mellon" 
+y obtendremos el archivo url.txt
+
+3-revisamos el archivo y obtenemos la direcion https://pastebin.com/SgaSizcn la ingresamos en el navegador y vemos que se trata de un archivo extraño 
+en txt al parecer en base 64
+
+4-enc -base64 -d -in SgaSizcn.txt -out salted.txt es el comando que usmos con el archivo,abrimos openssl para desencriptar el archivo SgaSizcn.txt 
+y lo llamamos salted al darnos cuenta que en su cabecera tiene esta palabra podemos deducir que es un tipo de codificacion como aes.
+
+5-si revisamos la imagen numero dos podremos ver que la metadata de la fotografia tenia un numero y un algo mas que subrayamos,
+esto nos servir para decubri que se trrataba de encriptacion AES-  -CBC nos falta el tamaño de bits pero es algo que soluciona a prueba y error.
+
+6- aes-256-cbc -d -md MD5 -salt -pass pass:68913499125FAA -in salted.txt -out minas es el comando que usamos con el archivo txt, 
+ahora podemos ver que es un video y dentro esta la contraseña 
+eso es todo
+
+en los archivos esta visible todo.
+
+
+anexo
+Kab***** 
+al cambio de una version de openssl a otro hay un cambio en la codificacion
+si usas una version moderna tienes q añadir -md md5
+te activa el modo "antiguo"
+https://github.com/fastlane/fastlane/issues/9542
+esto le ha pasado a mucha gente q le ha metido el openssl y le fue a la priemra
+y a mi y a otros no

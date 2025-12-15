@@ -1,0 +1,14 @@
+Herramienta usada: Cryptotool
+https://www.cryptool.org/de/
+se encuentra el texto, al buscar se redacta la flag y eso es todo :)
+
+la clave es rocinante
+
+
+
+sitio posible tambien de uso
+https://www.guballa.de/vigenere-solver
+clave en español y texto en español
+
+Key	"miguel"
+Key length	6

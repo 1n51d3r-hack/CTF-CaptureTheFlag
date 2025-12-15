@@ -1,0 +1,13 @@
+Herramienta usada: la web
+tool basica de ayuda: https://www.guballa.de/substitution-solver  
+se encuentra el texto  se debe analizar con cuidado, cualquiera diria que es un texto con criptografia, pero es un texto con reemplazo de string
+hay que ser ordenado y considerar que el texto esta en un idioma
+
+
+se puede adicionalmente usar esta :
+https://www.dcode.fr/monoalphabetic-substitution
+requiere tratar los alfanumericos antes de terminar el reto
+
+luego codificas en md5 formato flag->
+
+flag{e53f00b7124266f8ce045e27a873220e}
