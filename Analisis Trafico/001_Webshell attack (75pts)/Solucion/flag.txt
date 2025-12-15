@@ -1,0 +1,5 @@
+printf "www.dr0g0n2017.ccn-cert.com" | md5sum
+9c8f308fc7dc421b90c3e93e765bf355  -
+
+
+flag{9c8f308fc7dc421b90c3e93e765bf355}
